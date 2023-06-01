@@ -5,6 +5,7 @@
 /public/hot
 /public/storage
 /public/uploads
+/public/assets
 /storage/*.key
 /storage/debugbar
 /assets/img

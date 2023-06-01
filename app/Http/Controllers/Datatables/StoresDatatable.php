@@ -24,7 +24,7 @@ class StoresDatatable
         return Datatables::of($restaurants)
 
             ->editColumn('image', function ($restaurant) {
-                return '<img src="' . $restaurant->image . '" alt="' . $restaurant->name . '" height="65" width="65" style="border-radius: 0.275rem;">';
+                return '<img src="' . substr(url("/"), 0, strrpos(url("/"), "/")) . $restaurant->image . '" alt="' . $restaurant->name . '" height="65" width="65" style="border-radius: 0.275rem;">';
             })
 
             ->addColumn('areas', function ($restaurant) {
