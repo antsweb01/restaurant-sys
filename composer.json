@@ -47,6 +47,7 @@
 		"spatie/laravel-activitylog": "3.8.0",
 		"spatie/laravel-backup": "^6.11",
 		"spatie/laravel-permission": "^2.37",
+		"spatie/opening-hours": "^2.13",
 		"stripe/stripe-php": "^7.49",
 		"twilio/sdk": "^5.36",
 		"tymon/jwt-auth": "dev-develop",

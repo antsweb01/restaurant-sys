@@ -1250,6 +1250,7 @@ class AdminController extends Controller
             'payoutData' => $payoutData,
             'rating' => storeAvgRating($restaurant->ratings),
             'zones' => $zones,
+            'openclose' => $restaurant->openclose,
         ));
     }
 
@@ -1258,7 +1259,11 @@ class AdminController extends Controller
      */
     public function updateRestaurant(Request $request)
     {
-        // dd($request->all());
+        // dd($request);
+        
+        // dd(openCloseTimesArray($request->monday));
+
+        // dd(openCloseHolidayArray($request->holidays_date, $request->from_holidays_time, $request->to_holidays_time));
 
         $restaurant = Restaurant::where('id', $request->id)->with([
             'items' => function ($query) {
@@ -1410,6 +1415,18 @@ class AdminController extends Controller
 
                 $restaurant->zone_id = $request->zone_id;
             }
+
+            $openclose = array(
+                'monday'     => openCloseTimesArray($request->monday),
+                'tuesday'    => openCloseTimesArray($request->tuesday),
+                'wednesday'  => openCloseTimesArray($request->wednesday),
+                'thursday'   => openCloseTimesArray($request->thursday),
+                'friday'     => openCloseTimesArray($request->friday),
+                'saturday'   => openCloseTimesArray($request->saturday),
+                'sunday'     => openCloseTimesArray($request->sunday),
+                'exceptions' => openCloseHolidayArray($request->holidays_date, $request->from_holidays_time, $request->to_holidays_time)
+            );
+            $restaurant->openclose = json_encode($openclose);
 
             try {
                 if (isset($request->restaurant_category_restaurant)) {
