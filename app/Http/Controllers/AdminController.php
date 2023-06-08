@@ -2035,7 +2035,7 @@ class AdminController extends Controller
 
         $itemCategory->name = $request->name;
 
-        $available_duration = (count($request->duration) == 0) ? $request->duration : [];
+        $available_duration = (count($request->duration) == 2) ? $request->duration : [];
         $itemCategory->available_duration = json_encode($available_duration);
 
         $itemCategory->user_id = Auth::user()->id;
@@ -2077,7 +2077,7 @@ class AdminController extends Controller
         $itemCategory = ItemCategory::where('id', $request->id)->firstOrFail();
         $itemCategory->name = $request->name;
 
-        $available_duration = (count($request->duration) == 0) ? $request->duration : [];
+        $available_duration = (count($request->duration) == 2) ? $request->duration : [];
         $itemCategory->available_duration = json_encode($available_duration);
 
         $itemCategory->save();
