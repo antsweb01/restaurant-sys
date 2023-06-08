@@ -1260,10 +1260,6 @@ class AdminController extends Controller
     public function updateRestaurant(Request $request)
     {
         // dd($request);
-        
-        // dd(openCloseTimesArray($request->monday));
-
-        // dd(openCloseHolidayArray($request->holidays_date, $request->from_holidays_time, $request->to_holidays_time));
 
         $restaurant = Restaurant::where('id', $request->id)->with([
             'items' => function ($query) {
@@ -2038,6 +2034,10 @@ class AdminController extends Controller
         $itemCategory = new ItemCategory();
 
         $itemCategory->name = $request->name;
+
+        $available_duration = (count($request->duration) == 0) ? $request->duration : [];
+        $itemCategory->available_duration = json_encode($available_duration);
+
         $itemCategory->user_id = Auth::user()->id;
 
         try {
@@ -2076,6 +2076,10 @@ class AdminController extends Controller
     {
         $itemCategory = ItemCategory::where('id', $request->id)->firstOrFail();
         $itemCategory->name = $request->name;
+
+        $available_duration = (count($request->duration) == 0) ? $request->duration : [];
+        $itemCategory->available_duration = json_encode($available_duration);
+
         $itemCategory->save();
         return redirect()->back()->with(['success' => 'Operation Successful']);
     }
