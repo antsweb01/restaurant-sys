@@ -349,6 +349,7 @@ class RestaurantOwnerController extends Controller
                 'schedule_data' => json_decode($restaurant->schedule_data),
                 'adminPaymentGateways' => $adminPaymentGateways,
                 'payoutData' => $payoutData,
+                'openclose' => $restaurant->openclose,
             ));
         } else {
             return redirect()->route('restaurantowner.restaurants')->with(array('message' => 'Access Denied'));
@@ -1731,6 +1732,44 @@ class RestaurantOwnerController extends Controller
             } else {
                 return redirect()->back()->with(array('message' => __('storeDashboard.orderSomethingWentWrongNotification')));
             }
+        }
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function updateRestaurantOpencloseData(Request $request)
+    {
+        $user = Auth::user();
+        $restaurantIds = $user->restaurants->pluck('id')->toArray();
+
+        $restaurant = Restaurant::where('id', $request->id)->whereIn('id', $restaurantIds)->first();
+
+        if ($restaurant) {
+
+            $openclose = array(
+                'monday'     => openCloseTimesArray($request->monday),
+                'tuesday'    => openCloseTimesArray($request->tuesday),
+                'wednesday'  => openCloseTimesArray($request->wednesday),
+                'thursday'   => openCloseTimesArray($request->thursday),
+                'friday'     => openCloseTimesArray($request->friday),
+                'saturday'   => openCloseTimesArray($request->saturday),
+                'sunday'     => openCloseTimesArray($request->sunday),
+                'exceptions' => openCloseHolidayArray($request->holidays_date, $request->from_holidays_time, $request->to_holidays_time)
+            );
+            $restaurant->openclose = json_encode($openclose);
+
+            try {
+                $restaurant->save();
+                return redirect()->back()->with(array('success' => 'Open Close data Updated'));
+            } catch (\Illuminate\Database\QueryException $qe) {
+                return redirect()->back()->with(['message' => $qe->getMessage()]);
+            } catch (Exception $e) {
+                return redirect()->back()->with(['message' => $e->getMessage()]);
+            } catch (\Throwable $th) {
+                return redirect()->back()->with(['message' => $th]);
+            }
+
         }
     }
 };

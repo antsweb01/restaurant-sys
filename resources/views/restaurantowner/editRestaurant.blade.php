@@ -39,660 +39,1025 @@
 </div>
 <div class="content">
     <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <form action="{{ route('restaurant.updateRestaurant') }}" method="POST"
-                        enctype="multipart/form-data">
-                        <legend class="font-weight-semibold text-uppercase font-size-sm">
-                            <i class="icon-store2 mr-2"></i> {{__('storeDashboard.sePageTitleStoreDetails')}}
-                        </legend>
-                        <input type="hidden" name="id" value="{{ $restaurant->id }}">
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><span
-                                    class="text-danger">*</span>{{__('storeDashboard.seLblStoreName')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->name }}" type="text" class="form-control form-control-lg"
-                                    name="name" placeholder="{{__('storeDashboard.sePhStoreName')}}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><span
-                                    class="text-danger">*</span>{{__('storeDashboard.seLblDescription')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->description }}" type="text"
-                                    class="form-control form-control-lg" name="description"
-                                    placeholder="{{__('storeDashboard.sePhDescription')}}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblImage')}}:</label>
-                            <div class="col-lg-9">
-                                <img src="{{ substr(url("/"), 0, strrpos(url("/"), '/')) }}{{ $restaurant->image }}"
-                                    alt="Image" width="160" style="border-radius: 0.275rem;">
-                                <img class="slider-preview-image hidden" style="border-radius: 0.275rem;" />
-                                <div class="uploader">
-                                    <input type="hidden" name="old_image" value="{{ $restaurant->image }}">
-                                    <input type="file" class="form-control-uniform" name="image"
-                                        accept="image/x-png,image/gif,image/jpeg" onchange="readURL(this);">
-                                    <span class="help-text text-muted">{{__('storeDashboard.sePhImage')}}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><span
-                                    class="text-danger">*</span>{{__('storeDashboard.seLblApproxDeliveryTime')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->delivery_time }}" type="text"
-                                    class="form-control form-control-lg delivery_time" name="delivery_time"
-                                    placeholder="{{__('storeDashboard.sePhApproxDeliveryTime')}}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><span
-                                    class="text-danger">*</span>{{__('storeDashboard.seLblApproxPriceForTwo')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->price_range }}" type="text"
-                                    class="form-control form-control-lg price_range" name="price_range"
-                                    placeholder="{{__('storeDashboard.sePhApproxPriceForTwo')}} {{ config('setting.currencyFormat') }}"
-                                    required>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><span
-                                    class="text-danger">*</span>{{__('storeDashboard.seLblFullAddress')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->address }}" type="text"
-                                    class="form-control form-control-lg" name="address"
-                                    placeholder="{{__('storeDashboard.sePhFullAddress')}}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label" data-popup="tooltip"
-                                title="{{__('storeDashboard.seToolTipPincode')}}"
-                                data-placement="bottom">{{__('storeDashboard.seLblPincode')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->pincode }}" type="text"
-                                    class="form-control form-control-lg" name="pincode"
-                                    placeholder="{{__('storeDashboard.seToolTipPincode')}}" readonly="readonly">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblLandMark')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->landmark }}" type="text"
-                                    class="form-control form-control-lg" name="landmark"
-                                    placeholder="{{__('storeDashboard.sePhLandMark')}}" readonly="readonly">
-                            </div>
-                        </div>
-
-                        @if(config('setting.googleApiKeyNoRestriction') != null)
-                        <fieldset class="gllpLatlonPicker">
-                            <div width="100%" id="map" class="gllpMap" style="position: relative; overflow: hidden;">
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-lg-6">
-                                    <label class="col-form-label">{{__('storeDashboard.seLblLat')}}:</label><input
-                                        type="text" class="form-control form-control-lg gllpLatitude latitude"
-                                        value="{{ $restaurant->latitude }}" name="latitude"
-                                        placeholder="{{ __('storeDashboard.storeLatitudeFieldPlaceholder') }}"
-                                        required="required">
-                                </div>
-                                <div class="col-lg-6">
-                                    <label class="col-form-label">{{__('storeDashboard.seLblLong')}}:</label><input
-                                        type="text" class="form-control form-control-lg gllpLongitude longitude"
-                                        value="{{ $restaurant->longitude }}" name="longitude"
-                                        placeholder="{{ __('storeDashboard.storeLongitudeFieldPlaceholder') }}"
-                                        required="required">
-                                </div>
-                            </div>
-                            <input type="hidden" class="gllpZoom" value="20">
-                            <div class="d-flex justify-content-center">
-                                <div class="col-lg-9 d-flex location-search-block">
-                                    <input type="text" class="form-control form-control-lg gllpSearchField"
-                                        placeholder="{{__('storeDashboard.locationSearchPlaceholder')}}">
-                                    <button type="button"
-                                        class="btn btn-primary gllpSearchButton">{{__('storeDashboard.locationSearchBtnTxt')}}</button>
-                                </div>
-                            </div>
-                        </fieldset>
-                        @else
-                        <div class="form-group row">
-                            <div class="col-lg-6">
-                                <label class="col-form-label">{{__('storeDashboard.seLblLat')}}:</label><input
-                                    type="text" class="form-control form-control-lg gllpLatitude latitude"
-                                    value="{{ $restaurant->latitude }}" name="latitude"
-                                    placeholder="{{ __('storeDashboard.storeLatitudeFieldPlaceholder') }}"
-                                    required="required">
-                            </div>
-                            <div class="col-lg-6">
-                                <label class="col-form-label">{{__('storeDashboard.seLblLong')}}:</label><input
-                                    type="text" class="form-control form-control-lg gllpLongitude longitude"
-                                    value="{{ $restaurant->longitude }}" name="longitude"
-                                    placeholder="{{ __('storeDashboard.storeLongitudeFieldPlaceholder') }}"
-                                    required="required">
-                            </div>
-                        </div>
-                        <span class="text-muted">{{__('storeDashboard.sePhTextLatLong1')}} <a
-                                href="https://www.mapcoordinates.net/en"
-                                target="_blank">https://www.mapcoordinates.net/en</a></span> <br>
-                        {{__('storeDashboard.sePhTextLatLong2')}}
-                        @endif
-
-                        <hr>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblCertificate')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->certificate }}" type="text"
-                                    class="form-control form-control-lg" name="certificate"
-                                    placeholder="{{__('storeDashboard.sePhCertificate')}}">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblStoreCharge')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->restaurant_charges }}" type="text"
-                                    class="form-control form-control-lg restaurant_charges" name="restaurant_charges"
-                                    placeholder="{{__('storeDashboard.sePhStoreCharge')}} {{ config('setting.currencyFormat') }}">
-                            </div>
-                        </div>
-
-                        @if(config("setting.enSPU") == "true")
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><span
-                                    class="text-danger">*</span>{{__('storeDashboard.storeDeliveryTypeLabel')}}:</label>
-                            <div class="col-lg-9">
-                                <select class="form-control select" name="delivery_type" required>
-                                    <option value="1" class="text-capitalize" @if($restaurant->delivery_type == "1")
-                                        selected="selected"
-                                        @endif>{{__('storeDashboard.storeDeliveryTypeDeliveryOption')}}</option>
-                                    <option value="2" class="text-capitalize" @if($restaurant->delivery_type == "2")
-                                        selected="selected"
-                                        @endif>{{__('storeDashboard.storeDeliveryTypeSelfPickupOption')}}</option>
-                                    <option value="3" class="text-capitalize" @if($restaurant->delivery_type == "3")
-                                        selected="selected" @endif>{{__('storeDashboard.storeDeliveryTypeBothOption')}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        @endif
-
-                        @if(config('setting.allowPaymentGatewaySelection') == "true")
-                        <div class="form-group row">
-                            <label class="col-lg-4 col-form-label">{{__('storeDashboard.seLblSelectPaymentGateways')}}
-
-                                @if(count($restaurant->payment_gateways) == 0)
-                                <p class="text-danger">
-                                    <strong>{{__('storeDashboard.seNoStorePaymentGatewayMessage')}}</strong>
-                                </p>
-                                @endif
-                            </label>
-
-                            <div class="col-lg-8">
-                                <select multiple="multiple" class="form-control select" name="store_payment_gateways[]">
-                                    @foreach($adminPaymentGateways as $adminPaymentGateway)
-                                    <option value="{{ $adminPaymentGateway->id }}" class="text-capitalize"
-                                        {{ in_array($adminPaymentGateway->id, $restaurant->payment_gateways()->pluck('payment_gateway_id')->toArray()) ? 'selected' : '' }}>
-                                        {{ $adminPaymentGateway->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        @endif
-
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblPureVeg')}}</label>
-                            <div class="col-lg-9">
-                                <div class="checkbox checkbox-switchery mt-2">
-                                    <label>
-                                        <input value="true" type="checkbox" class="switchery-primary"
-                                            @if($restaurant->is_pureveg) checked="checked" @endif name="is_pureveg">
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblMinOrderPrice')}}:</label>
-                            <div class="col-lg-9">
-                                <input value="{{ $restaurant->min_order_price }}" type="text"
-                                    class="form-control form-control-lg min_order_price" name="min_order_price"
-                                    placeholder="{{__('storeDashboard.sePhMinOrderPrice')}} {{ config('setting.currencyFormat') }}">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label
-                                class="col-lg-3 col-form-label">{{ __('storeDashboard.seLblAutomaticScheduling') }}</label>
-                            <div class="col-lg-9">
-                                <div class="checkbox checkbox-switchery mt-2">
-                                    <label>
-                                        <input value="true" type="checkbox" class="switchery-primary"
-                                            @if($restaurant->is_schedulable) checked="checked" @endif
-                                        name="is_schedulable">
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            @if(\Nwidart\Modules\Facades\Module::find('OrderSchedule') &&
-                            \Nwidart\Modules\Facades\Module::find('OrderSchedule')->isEnabled())
-                            @if($restaurant->is_schedulable)
-                            <div class="form-group row">
-                                <label
-                                    class="col-lg-3 col-form-label">{{ __('orderScheduleLang.orderSchedulingOptionLabel') }}</label>
-                                <div class="col-lg-9">
-                                    <div class="checkbox checkbox-switchery mt-2">
-                                        <label>
-                                            <input value="true" type="checkbox" class="switchery-primary"
-                                                @if($restaurant->accept_scheduled_orders) checked="checked" @endif
-                                            name="accept_scheduled_orders">
-                                        </label>
-                                    </div>
-                                    {{ __('orderScheduleLang.orderSchedulingHelpTest') }}
-                                </div>
-                            </div>
-                            @else
-                            <mark>{{ __('orderScheduleLang.orderSchedulingInfoHelpText') }}</mark>
-                            @endif
-
-                            @if($restaurant->is_schedulable && $restaurant->accept_scheduled_orders)
-                            <div class="form-group row">
-                                <label
-                                    class="col-lg-3 col-form-label">{{ __('orderScheduleLang.todayOrderScheduleAfterLabel') }}</label>
-                                <div class="col-lg-9">
-                                    <input value="{{ $restaurant->schedule_slot_buffer }}" type="text"
-                                        class="form-control form-control-lg schedule_slot_buffer"
-                                        name="schedule_slot_buffer" placeholder="In Minutes">
-                                    <mark>{{ __('orderScheduleLang.todayOrderScheduleAfterHelpText') }}</mark>
-                                </div>
-                            </div>
-                            @endif
-
-                            @endif
-
-                        </div>
-                        @csrf
-                        <div class="text-left">
-                            <div class="btn-group btn-group-justified" style="width: 150px">
-                                @if($restaurant->is_active)
-                                <a href="{{ route('restaurant.disableRestaurant', $restaurant->id) }}"
-                                    class="btn btn-danger btn-labeled btn-labeled-left mr-2" data-popup="tooltip"
-                                    title="{{ __('storeDashboard.closeStoreToolTipMessage') }}" data-placement="bottom">
-                                    <b><i class="icon-switch2"></i></b>
-                                    {{__('storeDashboard.seDisable')}}
-                                </a>
-                                @else
-                                <a href="{{ route('restaurant.disableRestaurant', $restaurant->id) }}"
-                                    class="btn btn-secondary btn-labeled btn-labeled-left mr-2" data-popup="tooltip"
-                                    title="{{ __('storeDashboard.openStoreToolTipMessage') }}" data-placement="bottom">
-                                    <b><i class="icon-switch2"></i></b>
-                                    {{__('storeDashboard.seEnable')}}
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-primary">
-                                {{__('storeDashboard.update')}}
-                                <i class="icon-database-insert ml-1"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <form action="{{ route('restaurant.updateStorePayoutDetails') }}" method="POST">
-                        <legend class="font-weight-semibold text-uppercase font-size-sm">
-                            <i class="icon-coin-dollar mr-2"></i> {{ __('storeDashboard.payoutAccountDetailsTitle') }}
-                        </legend>
-                        <input type="hidden" name="restaurant_id" value="{{ $restaurant->id }}">
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.bankNameLabel') }}:
-                                </strong></label>
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control form-control-lg" name="bankName"
-                                    value="@if(!empty($payoutData->bankName)){{ $payoutData->bankName }}@endif">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.bankCodeLabel') }}:
-                                </strong></label>
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control form-control-lg" name="bankCode"
-                                    value="@if(!empty($payoutData->bankCode)){{ $payoutData->bankCode }}@endif">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.recipientNameLabel') }}:
-                                </strong></label>
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control form-control-lg" name="recipientName"
-                                    value="@if(!empty($payoutData->recipientName)){{ $payoutData->recipientName }}@endif">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.accountNumberLabel') }}:
-                                </strong></label>
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control form-control-lg" name="accountNumber"
-                                    value="@if(!empty($payoutData->accountNumber)){{ $payoutData->accountNumber }}@endif">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.paypalIdLabel') }}:
-                                </strong></label>
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control form-control-lg" name="paypalId"
-                                    value="@if(!empty($payoutData->paypalId)){{ $payoutData->paypalId }}@endif">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.upiIDLabel') }}:
-                                </strong></label>
-                            <div class="col-lg-9">
-                                <input type="text" class="form-control form-control-lg" name="upiID"
-                                    value="@if(!empty($payoutData->upiID)){{ $payoutData->upiID }}@endif">
-                            </div>
-                        </div>
-                        @csrf
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-primary">
-                                {{__('storeDashboard.update')}}
-                                <i class="icon-database-insert ml-1"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        @if($restaurant->is_schedulable)
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('restaurant.updateRestaurantScheduleData') }}" method="POST"
-                        enctype="multipart/form-data">
-                        <legend class="font-weight-semibold text-uppercase font-size-sm">
-                            <i class="icon-alarm mr-2"></i> {{ __('storeDashboard.seStoreSchedulingTimes') }}
-                        </legend>
-                        <div class="form-group row mb-0">
-                            <div class="col-lg-4">
-                                <h3>{{ __('storeDashboard.seMonday') }}</h3>
+                    <div class="d-lg-flex justify-content-lg-left">
+                        <ul class="nav nav-pills flex-column mr-lg-3 wmin-lg-250 mb-lg-0">
+                            <li class="nav-item">
+                                <a href="#generalSettings" class="nav-link active" data-toggle="tab">
+                                    <i class="icon-store2 mr-2"></i>
+                                    General
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#openCloseSettings" class="nav-link" data-toggle="tab">
+                                    <i class="icon-alarm mr-2"></i>
+                                    Open Close
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#payoutDetailsBlock" class="nav-link" data-toggle="tab">
+                                    <i class="icon-coin-dollar mr-2"></i>
+                                    Payout Details
+                                </a>
+                            </li>
+                            @if($restaurant->is_schedulable)
+                            <li class="nav-item">
+                                <a href="#autoSchedulingBlock" class="nav-link" data-toggle="tab">
+                                    <i class="icon-alarm mr-2"></i>
+                                    Scheduling
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
+                        <div class="tab-content" style="width: 100%; padding: 0 25px;">
+                            <div class="tab-pane fade show active" id="generalSettings">
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    {{__('storeDashboard.sePageTitleStoreDetails')}}
+                                </legend>
+                                <form action="{{ route('restaurant.updateRestaurant') }}" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" value="{{ $restaurant->id }}">
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span
+                                                class="text-danger">*</span>{{__('storeDashboard.seLblStoreName')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->name }}" type="text" class="form-control form-control-lg"
+                                                name="name" placeholder="{{__('storeDashboard.sePhStoreName')}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span
+                                                class="text-danger">*</span>{{__('storeDashboard.seLblDescription')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->description }}" type="text"
+                                                class="form-control form-control-lg" name="description"
+                                                placeholder="{{__('storeDashboard.sePhDescription')}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblImage')}}:</label>
+                                        <div class="col-lg-9">
+                                            <img src="{{ substr(url("/"), 0, strrpos(url("/"), '/')) }}{{ $restaurant->image }}"
+                                                alt="Image" width="160" style="border-radius: 0.275rem;">
+                                            <img class="slider-preview-image hidden" style="border-radius: 0.275rem;" />
+                                            <div class="uploader">
+                                                <input type="hidden" name="old_image" value="{{ $restaurant->image }}">
+                                                <input type="file" class="form-control-uniform" name="image"
+                                                    accept="image/x-png,image/gif,image/jpeg" onchange="readURL(this);">
+                                                <span class="help-text text-muted">{{__('storeDashboard.sePhImage')}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span
+                                                class="text-danger">*</span>{{__('storeDashboard.seLblApproxDeliveryTime')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->delivery_time }}" type="text"
+                                                class="form-control form-control-lg delivery_time" name="delivery_time"
+                                                placeholder="{{__('storeDashboard.sePhApproxDeliveryTime')}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span
+                                                class="text-danger">*</span>{{__('storeDashboard.seLblApproxPriceForTwo')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->price_range }}" type="text"
+                                                class="form-control form-control-lg price_range" name="price_range"
+                                                placeholder="{{__('storeDashboard.sePhApproxPriceForTwo')}} {{ config('setting.currencyFormat') }}"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span
+                                                class="text-danger">*</span>{{__('storeDashboard.seLblFullAddress')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->address }}" type="text"
+                                                class="form-control form-control-lg" name="address"
+                                                placeholder="{{__('storeDashboard.sePhFullAddress')}}" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label" data-popup="tooltip"
+                                            title="{{__('storeDashboard.seToolTipPincode')}}"
+                                            data-placement="bottom">{{__('storeDashboard.seLblPincode')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->pincode }}" type="text"
+                                                class="form-control form-control-lg" name="pincode"
+                                                placeholder="{{__('storeDashboard.seToolTipPincode')}}" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblLandMark')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->landmark }}" type="text"
+                                                class="form-control form-control-lg" name="landmark"
+                                                placeholder="{{__('storeDashboard.sePhLandMark')}}" readonly="readonly">
+                                        </div>
+                                    </div>
+
+                                    @if(config('setting.googleApiKeyNoRestriction') != null)
+                                    <fieldset class="gllpLatlonPicker">
+                                        <div width="100%" id="map" class="gllpMap" style="position: relative; overflow: hidden;">
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-6">
+                                                <label class="col-form-label">{{__('storeDashboard.seLblLat')}}:</label><input
+                                                    type="text" class="form-control form-control-lg gllpLatitude latitude"
+                                                    value="{{ $restaurant->latitude }}" name="latitude"
+                                                    placeholder="{{ __('storeDashboard.storeLatitudeFieldPlaceholder') }}"
+                                                    required="required">
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="col-form-label">{{__('storeDashboard.seLblLong')}}:</label><input
+                                                    type="text" class="form-control form-control-lg gllpLongitude longitude"
+                                                    value="{{ $restaurant->longitude }}" name="longitude"
+                                                    placeholder="{{ __('storeDashboard.storeLongitudeFieldPlaceholder') }}"
+                                                    required="required">
+                                            </div>
+                                        </div>
+                                        <input type="hidden" class="gllpZoom" value="20">
+                                        <div class="d-flex justify-content-center">
+                                            <div class="col-lg-9 d-flex location-search-block">
+                                                <input type="text" class="form-control form-control-lg gllpSearchField"
+                                                    placeholder="{{__('storeDashboard.locationSearchPlaceholder')}}">
+                                                <button type="button"
+                                                    class="btn btn-primary gllpSearchButton">{{__('storeDashboard.locationSearchBtnTxt')}}</button>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    @else
+                                    <div class="form-group row">
+                                        <div class="col-lg-6">
+                                            <label class="col-form-label">{{__('storeDashboard.seLblLat')}}:</label><input
+                                                type="text" class="form-control form-control-lg gllpLatitude latitude"
+                                                value="{{ $restaurant->latitude }}" name="latitude"
+                                                placeholder="{{ __('storeDashboard.storeLatitudeFieldPlaceholder') }}"
+                                                required="required">
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="col-form-label">{{__('storeDashboard.seLblLong')}}:</label><input
+                                                type="text" class="form-control form-control-lg gllpLongitude longitude"
+                                                value="{{ $restaurant->longitude }}" name="longitude"
+                                                placeholder="{{ __('storeDashboard.storeLongitudeFieldPlaceholder') }}"
+                                                required="required">
+                                        </div>
+                                    </div>
+                                    <span class="text-muted">{{__('storeDashboard.sePhTextLatLong1')}} <a
+                                            href="https://www.mapcoordinates.net/en"
+                                            target="_blank">https://www.mapcoordinates.net/en</a></span> <br>
+                                    {{__('storeDashboard.sePhTextLatLong2')}}
+                                    @endif
+
+                                    <hr>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblCertificate')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->certificate }}" type="text"
+                                                class="form-control form-control-lg" name="certificate"
+                                                placeholder="{{__('storeDashboard.sePhCertificate')}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblStoreCharge')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->restaurant_charges }}" type="text"
+                                                class="form-control form-control-lg restaurant_charges" name="restaurant_charges"
+                                                placeholder="{{__('storeDashboard.sePhStoreCharge')}} {{ config('setting.currencyFormat') }}">
+                                        </div>
+                                    </div>
+
+                                    @if(config("setting.enSPU") == "true")
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span
+                                                class="text-danger">*</span>{{__('storeDashboard.storeDeliveryTypeLabel')}}:</label>
+                                        <div class="col-lg-9">
+                                            <select class="form-control select" name="delivery_type" required>
+                                                <option value="1" class="text-capitalize" @if($restaurant->delivery_type == "1")
+                                                    selected="selected"
+                                                    @endif>{{__('storeDashboard.storeDeliveryTypeDeliveryOption')}}</option>
+                                                <option value="2" class="text-capitalize" @if($restaurant->delivery_type == "2")
+                                                    selected="selected"
+                                                    @endif>{{__('storeDashboard.storeDeliveryTypeSelfPickupOption')}}</option>
+                                                <option value="3" class="text-capitalize" @if($restaurant->delivery_type == "3")
+                                                    selected="selected" @endif>{{__('storeDashboard.storeDeliveryTypeBothOption')}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @endif
+
+                                    @if(config('setting.allowPaymentGatewaySelection') == "true")
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label">{{__('storeDashboard.seLblSelectPaymentGateways')}}
+
+                                            @if(count($restaurant->payment_gateways) == 0)
+                                            <p class="text-danger">
+                                                <strong>{{__('storeDashboard.seNoStorePaymentGatewayMessage')}}</strong>
+                                            </p>
+                                            @endif
+                                        </label>
+
+                                        <div class="col-lg-8">
+                                            <select multiple="multiple" class="form-control select" name="store_payment_gateways[]">
+                                                @foreach($adminPaymentGateways as $adminPaymentGateway)
+                                                <option value="{{ $adminPaymentGateway->id }}" class="text-capitalize"
+                                                    {{ in_array($adminPaymentGateway->id, $restaurant->payment_gateways()->pluck('payment_gateway_id')->toArray()) ? 'selected' : '' }}>
+                                                    {{ $adminPaymentGateway->name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @endif
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblPureVeg')}}</label>
+                                        <div class="col-lg-9">
+                                            <div class="checkbox checkbox-switchery mt-2">
+                                                <label>
+                                                    <input value="true" type="checkbox" class="switchery-primary"
+                                                        @if($restaurant->is_pureveg) checked="checked" @endif name="is_pureveg">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">{{__('storeDashboard.seLblMinOrderPrice')}}:</label>
+                                        <div class="col-lg-9">
+                                            <input value="{{ $restaurant->min_order_price }}" type="text"
+                                                class="form-control form-control-lg min_order_price" name="min_order_price"
+                                                placeholder="{{__('storeDashboard.sePhMinOrderPrice')}} {{ config('setting.currencyFormat') }}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label
+                                            class="col-lg-3 col-form-label">{{ __('storeDashboard.seLblAutomaticScheduling') }}</label>
+                                        <div class="col-lg-9">
+                                            <div class="checkbox checkbox-switchery mt-2">
+                                                <label>
+                                                    <input value="true" type="checkbox" class="switchery-primary"
+                                                        @if($restaurant->is_schedulable) checked="checked" @endif
+                                                    name="is_schedulable">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        @if(\Nwidart\Modules\Facades\Module::find('OrderSchedule') &&
+                                        \Nwidart\Modules\Facades\Module::find('OrderSchedule')->isEnabled())
+                                        @if($restaurant->is_schedulable)
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label">{{ __('orderScheduleLang.orderSchedulingOptionLabel') }}</label>
+                                            <div class="col-lg-9">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label>
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($restaurant->accept_scheduled_orders) checked="checked" @endif
+                                                        name="accept_scheduled_orders">
+                                                    </label>
+                                                </div>
+                                                {{ __('orderScheduleLang.orderSchedulingHelpTest') }}
+                                            </div>
+                                        </div>
+                                        @else
+                                        <mark>{{ __('orderScheduleLang.orderSchedulingInfoHelpText') }}</mark>
+                                        @endif
+
+                                        @if($restaurant->is_schedulable && $restaurant->accept_scheduled_orders)
+                                        <div class="form-group row">
+                                            <label
+                                                class="col-lg-3 col-form-label">{{ __('orderScheduleLang.todayOrderScheduleAfterLabel') }}</label>
+                                            <div class="col-lg-9">
+                                                <input value="{{ $restaurant->schedule_slot_buffer }}" type="text"
+                                                    class="form-control form-control-lg schedule_slot_buffer"
+                                                    name="schedule_slot_buffer" placeholder="In Minutes">
+                                                <mark>{{ __('orderScheduleLang.todayOrderScheduleAfterHelpText') }}</mark>
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        @endif
+
+                                    </div>
+                                    @csrf
+                                    <div class="text-left">
+                                        <div class="btn-group btn-group-justified" style="width: 150px">
+                                            @if($restaurant->is_active)
+                                            <a href="{{ route('restaurant.disableRestaurant', $restaurant->id) }}"
+                                                class="btn btn-danger btn-labeled btn-labeled-left mr-2" data-popup="tooltip"
+                                                title="{{ __('storeDashboard.closeStoreToolTipMessage') }}" data-placement="bottom">
+                                                <b><i class="icon-switch2"></i></b>
+                                                {{__('storeDashboard.seDisable')}}
+                                            </a>
+                                            @else
+                                            <a href="{{ route('restaurant.disableRestaurant', $restaurant->id) }}"
+                                                class="btn btn-secondary btn-labeled btn-labeled-left mr-2" data-popup="tooltip"
+                                                title="{{ __('storeDashboard.openStoreToolTipMessage') }}" data-placement="bottom">
+                                                <b><i class="icon-switch2"></i></b>
+                                                {{__('storeDashboard.seEnable')}}
+                                            </a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-primary">
+                                            {{__('storeDashboard.update')}}
+                                            <i class="icon-database-insert ml-1"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="openCloseSettings">
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    Open Close Settings
+                                </legend>
+                                <form action="{{ route('restaurant.updateRestaurantOpencloseData') }}" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" value="{{ $restaurant->id }}">
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Monday:</label>
+                                        @php
+                                            $monday_lunch = false;
+                                            $monday_col = 12;
+                                            $monday_times = extractOpenCloseTime($openclose, 'monday');
+                                            $monday_count = count($monday_times);
+                                            if($monday_count == 4){
+                                                $monday_lunch = true;
+                                                $monday_col = 6;
+                                            }
+                                        @endphp
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="checkbox checkbox-switchery mt-2">
+                                                        <label class="d-flex align-items-center">
+                                                            <input value="true" type="checkbox" class="switchery-primary"
+                                                                @if($monday_lunch) checked="checked" @endif
+                                                            name="monday_lunch" onChange="timeBind(this)" data-day="monday">
+                                                            <span class="ml-2">Add to lunch time</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="monday">
+                                                        <div class="col-lg-{{$monday_col}} d-flex align-items-center">
+                                                            <input value="@if($monday_count == 2 || $monday_count == 4){{$monday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($monday_count == 2 || $monday_count == 4){{$monday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                        </div>
+                                                        @if ($monday_lunch)
+                                                        <div class="col-lg-{{$monday_col}} d-flex align-items-center">
+                                                            <input value="@if($monday_count == 4){{$monday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($monday_count == 4){{$monday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Tuesday:</label>
+                                        @php
+                                            $tuesday_lunch = false;
+                                            $tuesday_col = 12;
+                                            $tuesday_times = extractOpenCloseTime($openclose, 'tuesday');
+                                            $tuesday_count = count($tuesday_times);
+                                            if($tuesday_count == 4){
+                                                $tuesday_lunch = true;
+                                                $tuesday_col = 6;
+                                            }
+                                        @endphp
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="checkbox checkbox-switchery mt-2">
+                                                        <label class="d-flex align-items-center">
+                                                            <input value="true" type="checkbox" class="switchery-primary"
+                                                                @if($tuesday_lunch) checked="checked" @endif
+                                                            name="tuesday_lunch" onChange="timeBind(this)" data-day="tuesday">
+                                                            <span class="ml-2">Add to lunch time</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="tuesday">
+                                                        <div class="col-lg-{{$tuesday_col}} d-flex align-items-center">
+                                                            <input value="@if($tuesday_count == 2 || $tuesday_count == 4){{$tuesday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($tuesday_count == 2 || $tuesday_count == 4){{$tuesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                        </div>
+                                                        @if ($tuesday_lunch)
+                                                        <div class="col-lg-{{$tuesday_col}} d-flex align-items-center">
+                                                            <input value="@if($tuesday_count == 4){{$tuesday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($tuesday_count == 4){{$tuesday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Wednesday:</label>
+                                        @php
+                                            $wednesday_lunch = false;
+                                            $wednesday_col = 12;
+                                            $wednesday_times = extractOpenCloseTime($openclose, 'wednesday');
+                                            $wednesday_count = count($wednesday_times);
+                                            if($wednesday_count == 4){
+                                                $wednesday_lunch = true;
+                                                $wednesday_col = 6;
+                                            }
+                                        @endphp
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="checkbox checkbox-switchery mt-2">
+                                                        <label class="d-flex align-items-center">
+                                                            <input value="true" type="checkbox" class="switchery-primary"
+                                                                @if($wednesday_lunch) checked="checked" @endif
+                                                            name="wednesday_lunch" onChange="timeBind(this)" data-day="wednesday">
+                                                            <span class="ml-2">Add to lunch time</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="wednesday">
+                                                        <div class="col-lg-{{$wednesday_col}} d-flex align-items-center">
+                                                            <input value="@if($wednesday_count == 2 || $wednesday_count == 4){{$wednesday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($wednesday_count == 2 || $wednesday_count == 4){{$wednesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                        </div>
+                                                        @if ($wednesday_lunch)
+                                                        <div class="col-lg-{{$wednesday_col}} d-flex align-items-center">
+                                                            <input value="@if($wednesday_count == 4){{$wednesday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($wednesday_count == 4){{$wednesday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Thursday:</label>
+                                        @php
+                                            $thursday_lunch = false;
+                                            $thursday_col = 12;
+                                            $thursday_times = extractOpenCloseTime($openclose, 'thursday');
+                                            $thursday_count = count($thursday_times);
+                                            if($thursday_count == 4){
+                                                $thursday_lunch = true;
+                                                $thursday_col = 6;
+                                            }
+                                        @endphp
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="checkbox checkbox-switchery mt-2">
+                                                        <label class="d-flex align-items-center">
+                                                            <input value="true" type="checkbox" class="switchery-primary"
+                                                                @if($thursday_lunch) checked="checked" @endif
+                                                            name="thursday_lunch" onChange="timeBind(this)" data-day="thursday">
+                                                            <span class="ml-2">Add to lunch time</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="thursday">
+                                                        <div class="col-lg-{{$thursday_col}} d-flex align-items-center">
+                                                            <input value="@if($thursday_count == 2 || $thursday_count == 4){{$thursday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($thursday_count == 2 || $thursday_count == 4){{$thursday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                        </div>
+                                                        @if ($thursday_lunch)
+                                                        <div class="col-lg-{{$thursday_col}} d-flex align-items-center">
+                                                            <input value="@if($thursday_count == 4){{$thursday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($thursday_count == 4){{$thursday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Friday:</label>
+                                        @php
+                                            $friday_lunch = false;
+                                            $friday_col = 12;
+                                            $friday_times = extractOpenCloseTime($openclose, 'friday');
+                                            $friday_count = count($friday_times);
+                                            if($friday_count == 4){
+                                                $friday_lunch = true;
+                                                $friday_col = 6;
+                                            }
+                                        @endphp
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="checkbox checkbox-switchery mt-2">
+                                                        <label class="d-flex align-items-center">
+                                                            <input value="true" type="checkbox" class="switchery-primary"
+                                                                @if($friday_lunch) checked="checked" @endif
+                                                            name="friday_lunch" onChange="timeBind(this)" data-day="friday">
+                                                            <span class="ml-2">Add to lunch time</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="friday">
+                                                        <div class="col-lg-{{$friday_col}} d-flex align-items-center">
+                                                            <input value="@if($friday_count == 2 || $friday_count == 4){{$friday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($friday_count == 2 || $friday_count == 4){{$friday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                        </div>
+                                                        @if ($friday_lunch)
+                                                        <div class="col-lg-{{$friday_col}} d-flex align-items-center">
+                                                            <input value="@if($friday_count == 4){{$friday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($friday_count == 4){{$friday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Saturday:</label>
+                                        @php
+                                            $saturday_lunch = false;
+                                            $saturday_col = 12;
+                                            $saturday_times = extractOpenCloseTime($openclose, 'saturday');
+                                            $saturday_count = count($saturday_times);
+                                            if($saturday_count == 4){
+                                                $saturday_lunch = true;
+                                                $saturday_col = 6;
+                                            }
+                                        @endphp
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="checkbox checkbox-switchery mt-2">
+                                                        <label class="d-flex align-items-center">
+                                                            <input value="true" type="checkbox" class="switchery-primary"
+                                                                @if($saturday_lunch) checked="checked" @endif
+                                                            name="saturday_lunch" onChange="timeBind(this)" data-day="saturday">
+                                                            <span class="ml-2">Add to lunch time</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="saturday">
+                                                        <div class="col-lg-{{$saturday_col}} d-flex align-items-center">
+                                                            <input value="@if($saturday_count == 2 || $saturday_count == 4){{$saturday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($saturday_count == 2 || $saturday_count == 4){{$saturday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                        </div>
+                                                        @if ($saturday_lunch)
+                                                        <div class="col-lg-{{$saturday_col}} d-flex align-items-center">
+                                                            <input value="@if($saturday_count == 4){{$saturday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($saturday_count == 4){{$saturday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Sunday:</label>
+                                        @php
+                                            $sunday_lunch = false;
+                                            $sunday_col = 12;
+                                            $sunday_times = extractOpenCloseTime($openclose, 'sunday');
+                                            $sunday_count = count($sunday_times);
+                                            if($sunday_count == 4){
+                                                $sunday_lunch = true;
+                                                $sunday_col = 6;
+                                            }
+                                        @endphp
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="checkbox checkbox-switchery mt-2">
+                                                        <label class="d-flex align-items-center">
+                                                            <input value="true" type="checkbox" class="switchery-primary"
+                                                                @if($sunday_lunch) checked="checked" @endif
+                                                            name="sunday_lunch" onChange="timeBind(this)" data-day="sunday">
+                                                            <span class="ml-2">Add to lunch time</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="row" id="sunday">
+                                                        <div class="col-lg-{{$sunday_col}} d-flex align-items-center">
+                                                            <input value="@if($sunday_count == 2 || $sunday_count == 4){{$sunday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($sunday_count == 2 || $sunday_count == 4){{$sunday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                        </div>
+                                                        @if ($sunday_lunch)
+                                                        <div class="col-lg-{{$sunday_col}} d-flex align-items-center">
+                                                            <input value="@if($sunday_count == 4){{$sunday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                            <label class="px-2">to</label>
+                                                            <input value="@if($sunday_count == 4){{$sunday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Holidays:</label>
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="d-flex mb-3">
+                                                        <button type="button" class="btn btn-info ml-auto mr-0" onclick="addHoliday()"><i class="icon-plus3"></i> Add Holiday</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12" id="holidays">
+                                                    @if (!empty($openclose))
+                                                        @php
+                                                            $exceptions = json_decode($openclose)->exceptions;
+                                                        @endphp
+                                                        @foreach ($exceptions as $key => $exception)
+                                                            @php
+                                                                $exc_times = explodeTime($exceptions->$key);
+                                                            @endphp
+                                                            <div class="row mb-2" data-key=""> <div class="col-lg-3"> <input value="{{ $key }}" type="text" class="form-control form-control-lg" name="holidays_date[]" placeholder="yyyy-mm-dd" required> </div> <div class="col-lg-7 d-flex align-items-center"> <input value="@if(count($exc_times) == 2){{$exc_times[0]}}@endif" type="time" class="form-control form-control-lg" name="from_holidays_time[]"> <label class="px-2">to</label> <input value="@if(count($exc_times) == 2){{$exc_times[1]}}@endif" type="time" class="form-control form-control-lg" name="to_holidays_time[]"> </div> <div class="col-lg-2"> <button type="button" class="btn btn-danger ml-auto mr-0" onclick="removeHoliday(this)"><i class="icon-bin"></i></button> </div> </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @csrf
+                                    <br>
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-primary">
+                                            {{__('storeDashboard.update')}}
+                                            <i class="icon-database-insert ml-1"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="payoutDetailsBlock">
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    {{ __('storeDashboard.payoutAccountDetailsTitle') }}
+                                </legend>
+                                <form action="{{ route('restaurant.updateStorePayoutDetails') }}" method="POST">
+                                    <input type="hidden" name="restaurant_id" value="{{ $restaurant->id }}">
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.bankNameLabel') }}:
+                                            </strong></label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control form-control-lg" name="bankName"
+                                                value="@if(!empty($payoutData->bankName)){{ $payoutData->bankName }}@endif">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.bankCodeLabel') }}:
+                                            </strong></label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control form-control-lg" name="bankCode"
+                                                value="@if(!empty($payoutData->bankCode)){{ $payoutData->bankCode }}@endif">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.recipientNameLabel') }}:
+                                            </strong></label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control form-control-lg" name="recipientName"
+                                                value="@if(!empty($payoutData->recipientName)){{ $payoutData->recipientName }}@endif">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.accountNumberLabel') }}:
+                                            </strong></label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control form-control-lg" name="accountNumber"
+                                                value="@if(!empty($payoutData->accountNumber)){{ $payoutData->accountNumber }}@endif">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.paypalIdLabel') }}:
+                                            </strong></label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control form-control-lg" name="paypalId"
+                                                value="@if(!empty($payoutData->paypalId)){{ $payoutData->paypalId }}@endif">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label"><strong>{{ __('storeDashboard.upiIDLabel') }}:
+                                            </strong></label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control form-control-lg" name="upiID"
+                                                value="@if(!empty($payoutData->upiID)){{ $payoutData->upiID }}@endif">
+                                        </div>
+                                    </div>
+                                    @csrf
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-primary">
+                                            {{__('storeDashboard.update')}}
+                                            <i class="icon-database-insert ml-1"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="autoSchedulingBlock">
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    {{ __('storeDashboard.seStoreSchedulingTimes') }}
+                                </legend>
+                                <form action="{{ route('restaurant.updateRestaurantScheduleData') }}" method="POST" enctype="multipart/form-data">
+                                    <div class="form-group row mb-0">
+                                        <div class="col-lg-4">
+                                            <h3>{{ __('storeDashboard.seMonday') }}</h3>
+                                        </div>
+                                    </div>
+                                    <!-- Checks if there is any schedule data -->
+                                    @if(!empty($schedule_data->monday) && count($schedule_data->monday) > 0)
+                                    <!-- If yes Then Loop Each Data as Time SLots -->
+                                    @foreach($schedule_data->monday as $time)
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
+                                                name="monday[]" required>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
+                                                name="monday[]" required>
+                                        </div>
+                                        <div class="col-lg-2" day="monday">
+                                            <label class="col-form-label text-center" style="width: 43px;"></span><i
+                                                    class="icon-circle-down2"></i></label><br>
+                                            <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
+                                                title="Remove Time Slot">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                    <div id="monday" class="timeSlots">
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="add(this)" data-day="monday"
+                                        class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
+                                                class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
+                                    <hr>
+                                    <div class="form-group row mb-0">
+                                        <div class="col-lg-4">
+                                            <h3>{{ __('storeDashboard.seTuesday') }}</h3>
+                                        </div>
+                                    </div>
+                                    <!-- Checks if there is any schedule data -->
+                                    @if(!empty($schedule_data->tuesday) && count($schedule_data->tuesday) > 0)
+                                    <!-- If yes Then Loop Each Data as Time SLots -->
+                                    @foreach($schedule_data->tuesday as $time)
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
+                                                name="tuesday[]" required>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
+                                                name="tuesday[]" required>
+                                        </div>
+                                        <div class="col-lg-2" day="tuesday">
+                                            <label class="col-form-label text-center" style="width: 43px;"></span><i
+                                                    class="icon-circle-down2"></i></label><br>
+                                            <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
+                                                title="Remove Time Slot">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                    <div id="tuesday" class="timeSlots">
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="add(this)" data-day="tuesday"
+                                        class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
+                                                class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
+                                    <hr>
+                                    <div class="form-group row mb-0">
+                                        <div class="col-lg-4">
+                                            <h3>{{ __('storeDashboard.seWednesday') }}</h3>
+                                        </div>
+                                    </div>
+                                    <!-- Checks if there is any schedule data -->
+                                    @if(!empty($schedule_data->wednesday) && count($schedule_data->wednesday) > 0)
+                                    <!-- If yes Then Loop Each Data as Time SLots -->
+                                    @foreach($schedule_data->wednesday as $time)
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
+                                                name="wednesday[]" required>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
+                                                name="wednesday[]" required>
+                                        </div>
+                                        <div class="col-lg-2" day="wednesday">
+                                            <label class="col-form-label text-center" style="width: 43px;"></span><i
+                                                    class="icon-circle-down2"></i></label><br>
+                                            <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
+                                                title="Remove Time Slot">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                    <div id="wednesday" class="timeSlots">
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="add(this)" data-day="wednesday"
+                                        class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
+                                                class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
+                                    <hr>
+                                    <div class="form-group row mb-0">
+                                        <div class="col-lg-4">
+                                            <h3>{{ __('storeDashboard.seThursday') }}</h3>
+                                        </div>
+                                    </div>
+                                    <!-- Checks if there is any schedule data -->
+                                    @if(!empty($schedule_data->thursday) && count($schedule_data->thursday) > 0)
+                                    <!-- If yes Then Loop Each Data as Time SLots -->
+                                    @foreach($schedule_data->thursday as $time)
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
+                                                name="thursday[]" required>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
+                                                name="thursday[]" required>
+                                        </div>
+                                        <div class="col-lg-2" day="thursday">
+                                            <label class="col-form-label text-center" style="width: 43px;"></span><i
+                                                    class="icon-circle-down2"></i></label><br>
+                                            <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
+                                                title="Remove Time Slot">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                    <div id="thursday" class="timeSlots">
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="add(this)" data-day="thursday"
+                                        class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
+                                                class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
+                                    <hr>
+                                    <div class="form-group row mb-0">
+                                        <div class="col-lg-4">
+                                            <h3>{{ __('storeDashboard.seFriday') }}</h3>
+                                        </div>
+                                    </div>
+                                    <!-- Checks if there is any schedule data -->
+                                    @if(!empty($schedule_data->friday) && count($schedule_data->friday) > 0)
+                                    <!-- If yes Then Loop Each Data as Time SLots -->
+                                    @foreach($schedule_data->friday as $time)
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
+                                                name="friday[]" required>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
+                                                name="friday[]" required>
+                                        </div>
+                                        <div class="col-lg-2" day="friday">
+                                            <label class="col-form-label text-center" style="width: 43px;"></span><i
+                                                    class="icon-circle-down2"></i></label><br>
+                                            <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
+                                                title="Remove Time Slot">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                    <div id="friday" class="timeSlots">
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="add(this)" data-day="friday"
+                                        class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
+                                                class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
+                                    <hr>
+                                    <div class="form-group row mb-0">
+                                        <div class="col-lg-4">
+                                            <h3>{{ __('storeDashboard.seSaturday') }}</h3>
+                                        </div>
+                                    </div>
+                                    <!-- Checks if there is any schedule data -->
+                                    @if(!empty($schedule_data->saturday) && count($schedule_data->saturday) > 0)
+                                    <!-- If yes Then Loop Each Data as Time SLots -->
+                                    @foreach($schedule_data->saturday as $time)
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
+                                                name="saturday[]" required>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
+                                                name="saturday[]" required>
+                                        </div>
+                                        <div class="col-lg-2" day="saturday">
+                                            <label class="col-form-label text-center" style="width: 43px;"></span><i
+                                                    class="icon-circle-down2"></i></label><br>
+                                            <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
+                                                title="Remove Time Slot">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                    <div id="saturday" class="timeSlots">
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="add(this)" data-day="saturday"
+                                        class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
+                                                class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
+                                    <hr>
+                                    <div class="form-group row mb-0">
+                                        <div class="col-lg-4">
+                                            <h3>{{ __('storeDashboard.seSunday') }}</h3>
+                                        </div>
+                                    </div>
+                                    <!-- Checks if there is any schedule data -->
+                                    @if(!empty($schedule_data->sunday) && count($schedule_data->sunday) > 0)
+                                    <!-- If yes Then Loop Each Data as Time SLots -->
+                                    @foreach($schedule_data->sunday as $time)
+                                    <div class="form-group row">
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
+                                                name="sunday[]" required>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
+                                            <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
+                                                name="sunday[]" required>
+                                        </div>
+                                        <div class="col-lg-2" day="sunday">
+                                            <label class="col-form-label text-center" style="width: 43px;"></span><i
+                                                    class="icon-circle-down2"></i></label><br>
+                                            <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
+                                                title="Remove Time Slot">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
+                                    <div id="sunday" class="timeSlots">
+                                    </div>
+                                    <a href="javascript:void(0)" onclick="add(this)" data-day="sunday"
+                                        class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
+                                                class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
+                                    <hr>
+                                    <input type="text" name="restaurant_id" hidden value="{{$restaurant->id}}">
+                                    @csrf
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-primary" data-popup="tooltip"
+                                            title="{{ __('storeDashboard.seScheduleUpdateMsg') }}" data-placement="bottom">
+                                            {{ __('storeDashboard.update') }}
+                                            <i class="icon-database-insert ml-1"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <!-- Checks if there is any schedule data -->
-                        @if(!empty($schedule_data->monday) && count($schedule_data->monday) > 0)
-                        <!-- If yes Then Loop Each Data as Time SLots -->
-                        @foreach($schedule_data->monday as $time)
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
-                                    name="monday[]" required>
-                            </div>
-                            <div class="col-lg-5">
-                                <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
-                                    name="monday[]" required>
-                            </div>
-                            <div class="col-lg-2" day="monday">
-                                <label class="col-form-label text-center" style="width: 43px;"></span><i
-                                        class="icon-circle-down2"></i></label><br>
-                                <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
-                                    title="Remove Time Slot">
-                                    <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                        <div id="monday" class="timeSlots">
-                        </div>
-                        <a href="javascript:void(0)" onclick="add(this)" data-day="monday"
-                            class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
-                                    class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
-                        <hr>
-                        <div class="form-group row mb-0">
-                            <div class="col-lg-4">
-                                <h3>{{ __('storeDashboard.seTuesday') }}</h3>
-                            </div>
-                        </div>
-                        <!-- Checks if there is any schedule data -->
-                        @if(!empty($schedule_data->tuesday) && count($schedule_data->tuesday) > 0)
-                        <!-- If yes Then Loop Each Data as Time SLots -->
-                        @foreach($schedule_data->tuesday as $time)
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
-                                    name="tuesday[]" required>
-                            </div>
-                            <div class="col-lg-5">
-                                <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
-                                    name="tuesday[]" required>
-                            </div>
-                            <div class="col-lg-2" day="tuesday">
-                                <label class="col-form-label text-center" style="width: 43px;"></span><i
-                                        class="icon-circle-down2"></i></label><br>
-                                <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
-                                    title="Remove Time Slot">
-                                    <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                        <div id="tuesday" class="timeSlots">
-                        </div>
-                        <a href="javascript:void(0)" onclick="add(this)" data-day="tuesday"
-                            class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
-                                    class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
-                        <hr>
-                        <div class="form-group row mb-0">
-                            <div class="col-lg-4">
-                                <h3>{{ __('storeDashboard.seWednesday') }}</h3>
-                            </div>
-                        </div>
-                        <!-- Checks if there is any schedule data -->
-                        @if(!empty($schedule_data->wednesday) && count($schedule_data->wednesday) > 0)
-                        <!-- If yes Then Loop Each Data as Time SLots -->
-                        @foreach($schedule_data->wednesday as $time)
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
-                                    name="wednesday[]" required>
-                            </div>
-                            <div class="col-lg-5">
-                                <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
-                                    name="wednesday[]" required>
-                            </div>
-                            <div class="col-lg-2" day="wednesday">
-                                <label class="col-form-label text-center" style="width: 43px;"></span><i
-                                        class="icon-circle-down2"></i></label><br>
-                                <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
-                                    title="Remove Time Slot">
-                                    <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                        <div id="wednesday" class="timeSlots">
-                        </div>
-                        <a href="javascript:void(0)" onclick="add(this)" data-day="wednesday"
-                            class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
-                                    class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
-                        <hr>
-                        <div class="form-group row mb-0">
-                            <div class="col-lg-4">
-                                <h3>{{ __('storeDashboard.seThursday') }}</h3>
-                            </div>
-                        </div>
-                        <!-- Checks if there is any schedule data -->
-                        @if(!empty($schedule_data->thursday) && count($schedule_data->thursday) > 0)
-                        <!-- If yes Then Loop Each Data as Time SLots -->
-                        @foreach($schedule_data->thursday as $time)
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
-                                    name="thursday[]" required>
-                            </div>
-                            <div class="col-lg-5">
-                                <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
-                                    name="thursday[]" required>
-                            </div>
-                            <div class="col-lg-2" day="thursday">
-                                <label class="col-form-label text-center" style="width: 43px;"></span><i
-                                        class="icon-circle-down2"></i></label><br>
-                                <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
-                                    title="Remove Time Slot">
-                                    <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                        <div id="thursday" class="timeSlots">
-                        </div>
-                        <a href="javascript:void(0)" onclick="add(this)" data-day="thursday"
-                            class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
-                                    class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
-                        <hr>
-                        <div class="form-group row mb-0">
-                            <div class="col-lg-4">
-                                <h3>{{ __('storeDashboard.seFriday') }}</h3>
-                            </div>
-                        </div>
-                        <!-- Checks if there is any schedule data -->
-                        @if(!empty($schedule_data->friday) && count($schedule_data->friday) > 0)
-                        <!-- If yes Then Loop Each Data as Time SLots -->
-                        @foreach($schedule_data->friday as $time)
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
-                                    name="friday[]" required>
-                            </div>
-                            <div class="col-lg-5">
-                                <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
-                                    name="friday[]" required>
-                            </div>
-                            <div class="col-lg-2" day="friday">
-                                <label class="col-form-label text-center" style="width: 43px;"></span><i
-                                        class="icon-circle-down2"></i></label><br>
-                                <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
-                                    title="Remove Time Slot">
-                                    <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                        <div id="friday" class="timeSlots">
-                        </div>
-                        <a href="javascript:void(0)" onclick="add(this)" data-day="friday"
-                            class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
-                                    class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
-                        <hr>
-                        <div class="form-group row mb-0">
-                            <div class="col-lg-4">
-                                <h3>{{ __('storeDashboard.seSaturday') }}</h3>
-                            </div>
-                        </div>
-                        <!-- Checks if there is any schedule data -->
-                        @if(!empty($schedule_data->saturday) && count($schedule_data->saturday) > 0)
-                        <!-- If yes Then Loop Each Data as Time SLots -->
-                        @foreach($schedule_data->saturday as $time)
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
-                                    name="saturday[]" required>
-                            </div>
-                            <div class="col-lg-5">
-                                <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
-                                    name="saturday[]" required>
-                            </div>
-                            <div class="col-lg-2" day="saturday">
-                                <label class="col-form-label text-center" style="width: 43px;"></span><i
-                                        class="icon-circle-down2"></i></label><br>
-                                <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
-                                    title="Remove Time Slot">
-                                    <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                        <div id="saturday" class="timeSlots">
-                        </div>
-                        <a href="javascript:void(0)" onclick="add(this)" data-day="saturday"
-                            class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
-                                    class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
-                        <hr>
-                        <div class="form-group row mb-0">
-                            <div class="col-lg-4">
-                                <h3>{{ __('storeDashboard.seSunday') }}</h3>
-                            </div>
-                        </div>
-                        <!-- Checks if there is any schedule data -->
-                        @if(!empty($schedule_data->sunday) && count($schedule_data->sunday) > 0)
-                        <!-- If yes Then Loop Each Data as Time SLots -->
-                        @foreach($schedule_data->sunday as $time)
-                        <div class="form-group row">
-                            <div class="col-lg-5">
-                                <label class="col-form-label">{{ __('storeDashboard.seOpeningTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->open}}"
-                                    name="sunday[]" required>
-                            </div>
-                            <div class="col-lg-5">
-                                <label class="col-form-label"></span>{{ __('storeDashboard.seClosingTime') }}</label>
-                                <input type="time" class="form-control form-control-lg" value="{{$time->close}}"
-                                    name="sunday[]" required>
-                            </div>
-                            <div class="col-lg-2" day="sunday">
-                                <label class="col-form-label text-center" style="width: 43px;"></span><i
-                                        class="icon-circle-down2"></i></label><br>
-                                <button class="remove btn btn-danger" data-popup="tooltip" data-placement="right"
-                                    title="Remove Time Slot">
-                                    <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                        @endif
-                        <div id="sunday" class="timeSlots">
-                        </div>
-                        <a href="javascript:void(0)" onclick="add(this)" data-day="sunday"
-                            class="btn btn-secondary btn-labeled btn-labeled-left mr-2"> <b><i
-                                    class="icon-plus22"></i></b>{{ __('storeDashboard.seAddSlot') }}</a>
-                        <hr>
-                        <input type="text" name="restaurant_id" hidden value="{{$restaurant->id}}">
-                        @csrf
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-primary" data-popup="tooltip"
-                                title="{{ __('storeDashboard.seScheduleUpdateMsg') }}" data-placement="bottom">
-                                {{ __('storeDashboard.update') }}
-                                <i class="icon-database-insert ml-1"></i>
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-        @endif
     </div>
 </div>
 <script>
@@ -757,5 +1122,32 @@
        $('.delivery_charges').numeric({ allowThouSep:false, maxDecimalPlaces: 2 });
        $('.min_order_price').numeric({ allowThouSep:false, maxDecimalPlaces: 2, allowMinus: false });
     });
+
+    function timeBind(data) {
+        var el = "";
+        let day = data.getAttribute("data-day")
+        if(data.checked){
+            el = '<div class="col-lg-6 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> </div> <div class="col-lg-6 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> </div>';
+        }else{
+            el = '<div class="col-lg-12 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> </div>';
+        }
+        document.getElementById(day).innerHTML = el;
+    }
+
+    function addHoliday() {
+        var para = document.createElement("div");
+        
+        para.innerHTML = '<div class="row mb-2" data-key=""> <div class="col-lg-3"> <input value="" type="text" class="form-control form-control-lg" name="holidays_date[]" placeholder="yyyy-mm-dd" required> </div> <div class="col-lg-7 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="from_holidays_time[]"> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="to_holidays_time[]"> </div> <div class="col-lg-2"> <button type="button" class="btn btn-danger ml-auto mr-0" onclick="removeHoliday(this)"><i class="icon-bin"></i></button> </div> </div>';
+
+        document.getElementById('holidays').appendChild(para);
+
+        let temp = document.getElementById('holidays');
+
+        console.log(temp.children.length);
+    }
+
+    function removeHoliday(node) {
+        node.parentNode.parentNode.parentNode.removeChild(node.parentNode.parentNode);
+    }
 </script>
 @endsection

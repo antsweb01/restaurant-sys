@@ -24,6 +24,8 @@ Route::group(['prefix' => 'store-owner', 'middleware' => ['auth', 'storeowner']]
 
     Route::post('/store/schedule/save', 'RestaurantOwnerController@updateRestaurantScheduleData')->name('restaurant.updateRestaurantScheduleData');
 
+    Route::post('/store/openclose/save', 'RestaurantOwnerController@updateRestaurantOpencloseData')->name('restaurant.updateRestaurantOpencloseData');
+
     Route::get('/itemcategories', 'RestaurantOwnerController@itemcategories')->name('restaurant.itemcategories');
     Route::post('/itemcategories/new/save', 'RestaurantOwnerController@createItemCategory')->name('restaurant.createItemCategory');
     Route::get('/itemcategory/disable/{id}', 'RestaurantOwnerController@disableCategory')->name('restaurant.disableCategory');

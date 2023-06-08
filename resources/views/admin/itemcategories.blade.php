@@ -59,10 +59,13 @@
                                 </span>
                             </td>
                             <td>{{ $itemCategory->created_at->diffForHumans() }}</td>
+                            @php
+                                $duration = json_decode($itemCategory->available_duration);
+                            @endphp
                             <td class="text-center">
                                 <div class="btn-group btn-group-justified align-items-center">
                                     <a href="javascript:void(0)" data-toggle="modal" data-target="#editItemCategory"
-                                        data-catid="{{ $itemCategory->id }}" data-catname="{{ $itemCategory->name }}"
+                                        data-catid="{{ $itemCategory->id }}" data-catname="{{ $itemCategory->name }}" data-fromtime="@if(count($duration)){{$duration[0]}}@endif" data-totime="@if(count($duration)){{$duration[1]}}@endif"
                                         class="btn btn-sm btn-primary editItemCategory"> Edit</a>
                                     <div class="checkbox checkbox-switchery ml-1" style="padding-top: 0.8rem;">
                                         <label>
@@ -97,6 +100,19 @@
                                 placeholder="Enter Category Name" required>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Available Duration:</label>
+                        <div class="col-lg-9">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="time" value="" class="form-control form-control-lg" name="duration[]">
+                                </div>
+                                <div class="col-6">
+                                    <input type="time" value="" class="form-control form-control-lg" name="duration[]">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @csrf
                     <div class="text-right">
                         <button type="submit" class="btn btn-primary">
@@ -126,6 +142,19 @@
                                 placeholder="Enter Category Name" required id="itemCatName">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Available Duration:</label>
+                        <div class="col-lg-9">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="time" value="" class="form-control form-control-lg" name="duration[]" id="fromTime">
+                                </div>
+                                <div class="col-6">
+                                    <input type="time" value="" class="form-control form-control-lg" name="duration[]" id="toTime">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     @csrf
                     <div class="text-right">
                         <button type="submit" class="btn btn-primary">
@@ -143,6 +172,8 @@
         $('.editItemCategory').click(function(event) {
             $('#itemCatId').val($(this).data("catid"));
             $('#itemCatName').val($(this).data("catname"));
+            $('#fromTime').val($(this).data("fromtime"));
+            $('#toTime').val($(this).data("totime"));
         });
         //Switch Action Function
         if (Array.prototype.forEach) {
