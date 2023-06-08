@@ -22,6 +22,11 @@
     </div>
 </div>
 
+@php
+    // dd(json_decode($openclose)->exceptions);
+    // dd(extractOpenCloseTime($openclose->monday));
+@endphp
+
 <div class="content">
     <div class="col-md-12">
         <div class="card">
@@ -46,6 +51,12 @@
                                 <a href="#generalSettings" class="nav-link active" data-toggle="tab">
                                     <i class="icon-store2 mr-2"></i>
                                     General
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#openCloseSettings" class="nav-link" data-toggle="tab">
+                                    <i class="icon-alarm mr-2"></i>
+                                    Open Close
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -208,6 +219,339 @@
 
                                 </div>
 
+                            </div>
+
+                            <div class="tab-pane fade" id="openCloseSettings">
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    Open Close Settings
+                                </legend>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Monday:</label>
+                                    @php
+                                        $monday_lunch = false;
+                                        $monday_col = 12;
+                                        $monday_times = extractOpenCloseTime($openclose, 'monday');
+                                        $monday_count = count($monday_times);
+                                        if($monday_count == 4){
+                                            $monday_lunch = true;
+                                            $monday_col = 6;
+                                        }
+                                    @endphp
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label class="d-flex align-items-center">
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($monday_lunch) checked="checked" @endif
+                                                        name="monday_lunch" onChange="timeBind(this)" data-day="monday">
+                                                        <span class="ml-2">Add to lunch time</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="row" id="monday">
+                                                    <div class="col-lg-{{$monday_col}} d-flex align-items-center">
+                                                        <input value="@if($monday_count == 2 || $monday_count == 4){{$monday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($monday_count == 2 || $monday_count == 4){{$monday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                    </div>
+                                                    @if ($monday_lunch)
+                                                    <div class="col-lg-{{$monday_col}} d-flex align-items-center">
+                                                        <input value="@if($monday_count == 4){{$monday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($monday_count == 4){{$monday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="monday[]">
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Tuesday:</label>
+                                    @php
+                                        $tuesday_lunch = false;
+                                        $tuesday_col = 12;
+                                        $tuesday_times = extractOpenCloseTime($openclose, 'tuesday');
+                                        $tuesday_count = count($tuesday_times);
+                                        if($tuesday_count == 4){
+                                            $tuesday_lunch = true;
+                                            $tuesday_col = 6;
+                                        }
+                                    @endphp
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label class="d-flex align-items-center">
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($tuesday_lunch) checked="checked" @endif
+                                                        name="tuesday_lunch" onChange="timeBind(this)" data-day="tuesday">
+                                                        <span class="ml-2">Add to lunch time</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="row" id="tuesday">
+                                                    <div class="col-lg-{{$tuesday_col}} d-flex align-items-center">
+                                                        <input value="@if($tuesday_count == 2 || $tuesday_count == 4){{$tuesday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($tuesday_count == 2 || $tuesday_count == 4){{$tuesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                    </div>
+                                                    @if ($tuesday_lunch)
+                                                    <div class="col-lg-{{$tuesday_col}} d-flex align-items-center">
+                                                        <input value="@if($tuesday_count == 4){{$tuesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($tuesday_count == 4){{$tuesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="tuesday[]">
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Wednesday:</label>
+                                    @php
+                                        $wednesday_lunch = false;
+                                        $wednesday_col = 12;
+                                        $wednesday_times = extractOpenCloseTime($openclose, 'wednesday');
+                                        $wednesday_count = count($wednesday_times);
+                                        if($wednesday_count == 4){
+                                            $wednesday_lunch = true;
+                                            $wednesday_col = 6;
+                                        }
+                                    @endphp
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label class="d-flex align-items-center">
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($wednesday_lunch) checked="checked" @endif
+                                                        name="wednesday_lunch" onChange="timeBind(this)" data-day="wednesday">
+                                                        <span class="ml-2">Add to lunch time</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="row" id="wednesday">
+                                                    <div class="col-lg-{{$wednesday_col}} d-flex align-items-center">
+                                                        <input value="@if($wednesday_count == 2 || $wednesday_count == 4){{$wednesday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($wednesday_count == 2 || $wednesday_count == 4){{$wednesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                    </div>
+                                                    @if ($wednesday_lunch)
+                                                    <div class="col-lg-{{$wednesday_col}} d-flex align-items-center">
+                                                        <input value="@if($wednesday_count == 4){{$wednesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($wednesday_count == 4){{$wednesday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="wednesday[]">
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Thursday:</label>
+                                    @php
+                                        $thursday_lunch = false;
+                                        $thursday_col = 12;
+                                        $thursday_times = extractOpenCloseTime($openclose, 'thursday');
+                                        $thursday_count = count($thursday_times);
+                                        if($thursday_count == 4){
+                                            $thursday_lunch = true;
+                                            $thursday_col = 6;
+                                        }
+                                    @endphp
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label class="d-flex align-items-center">
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($thursday_lunch) checked="checked" @endif
+                                                        name="thursday_lunch" onChange="timeBind(this)" data-day="thursday">
+                                                        <span class="ml-2">Add to lunch time</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="row" id="thursday">
+                                                    <div class="col-lg-{{$thursday_col}} d-flex align-items-center">
+                                                        <input value="@if($thursday_count == 2 || $thursday_count == 4){{$thursday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($thursday_count == 2 || $thursday_count == 4){{$thursday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                    </div>
+                                                    @if ($thursday_lunch)
+                                                    <div class="col-lg-{{$thursday_col}} d-flex align-items-center">
+                                                        <input value="@if($thursday_count == 4){{$thursday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($thursday_count == 4){{$thursday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="thursday[]">
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Friday:</label>
+                                    @php
+                                        $friday_lunch = false;
+                                        $friday_col = 12;
+                                        $friday_times = extractOpenCloseTime($openclose, 'friday');
+                                        $friday_count = count($friday_times);
+                                        if($friday_count == 4){
+                                            $friday_lunch = true;
+                                            $friday_col = 6;
+                                        }
+                                    @endphp
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label class="d-flex align-items-center">
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($friday_lunch) checked="checked" @endif
+                                                        name="friday_lunch" onChange="timeBind(this)" data-day="friday">
+                                                        <span class="ml-2">Add to lunch time</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="row" id="friday">
+                                                    <div class="col-lg-{{$friday_col}} d-flex align-items-center">
+                                                        <input value="@if($friday_count == 2 || $friday_count == 4){{$friday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($friday_count == 2 || $friday_count == 4){{$friday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                    </div>
+                                                    @if ($friday_lunch)
+                                                    <div class="col-lg-{{$friday_col}} d-flex align-items-center">
+                                                        <input value="@if($friday_count == 4){{$friday_times[2]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($friday_count == 4){{$friday_times[3]}}@endif" type="time" class="form-control form-control-lg" name="friday[]">
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Saturday:</label>
+                                    @php
+                                        $saturday_lunch = false;
+                                        $saturday_col = 12;
+                                        $saturday_times = extractOpenCloseTime($openclose, 'saturday');
+                                        $saturday_count = count($saturday_times);
+                                        if($saturday_count == 4){
+                                            $saturday_lunch = true;
+                                            $saturday_col = 6;
+                                        }
+                                    @endphp
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label class="d-flex align-items-center">
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($saturday_lunch) checked="checked" @endif
+                                                        name="saturday_lunch" onChange="timeBind(this)" data-day="saturday">
+                                                        <span class="ml-2">Add to lunch time</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="row" id="saturday">
+                                                    <div class="col-lg-{{$saturday_col}} d-flex align-items-center">
+                                                        <input value="@if($saturday_count == 2 || $saturday_count == 4){{$saturday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($saturday_count == 2 || $saturday_count == 4){{$saturday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                    </div>
+                                                    @if ($saturday_lunch)
+                                                    <div class="col-lg-{{$saturday_col}} d-flex align-items-center">
+                                                        <input value="@if($saturday_count == 4){{$saturday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($saturday_count == 4){{$saturday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="saturday[]">
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Sunday:</label>
+                                    @php
+                                        $sunday_lunch = false;
+                                        $sunday_col = 12;
+                                        $sunday_times = extractOpenCloseTime($openclose, 'sunday');
+                                        $sunday_count = count($sunday_times);
+                                        if($sunday_count == 4){
+                                            $sunday_lunch = true;
+                                            $sunday_col = 6;
+                                        }
+                                    @endphp
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="checkbox checkbox-switchery mt-2">
+                                                    <label class="d-flex align-items-center">
+                                                        <input value="true" type="checkbox" class="switchery-primary"
+                                                            @if($sunday_lunch) checked="checked" @endif
+                                                        name="sunday_lunch" onChange="timeBind(this)" data-day="sunday">
+                                                        <span class="ml-2">Add to lunch time</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="row" id="sunday">
+                                                    <div class="col-lg-{{$sunday_col}} d-flex align-items-center">
+                                                        <input value="@if($sunday_count == 2 || $sunday_count == 4){{$sunday_times[0]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($sunday_count == 2 || $sunday_count == 4){{$sunday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                    </div>
+                                                    @if ($sunday_lunch)
+                                                    <div class="col-lg-{{$sunday_col}} d-flex align-items-center">
+                                                        <input value="@if($sunday_count == 4){{$sunday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                        <label class="px-2">to</label>
+                                                        <input value="@if($sunday_count == 4){{$sunday_times[1]}}@endif" type="time" class="form-control form-control-lg" name="sunday[]">
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label">Holidays:</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="d-flex mb-3">
+                                                    <button type="button" class="btn btn-info ml-auto mr-0" onclick="addHoliday()"><i class="icon-plus3"></i> Add Holiday</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12" id="holidays">
+                                                @if (!empty($openclose))
+                                                    @php
+                                                        $exceptions = json_decode($openclose)->exceptions;
+                                                    @endphp
+                                                    @foreach ($exceptions as $key => $exception)
+                                                        @php
+                                                            $exc_times = explodeTime($exceptions->$key);
+                                                        @endphp
+                                                        <div class="row mb-2" data-key=""> <div class="col-lg-3"> <input value="{{ $key }}" type="text" class="form-control form-control-lg" name="holidays_date[]" placeholder="yyyy-mm-dd" required> </div> <div class="col-lg-7 d-flex align-items-center"> <input value="@if(count($exc_times) == 2){{$exc_times[0]}}@endif" type="time" class="form-control form-control-lg" name="from_holidays_time[]"> <label class="px-2">to</label> <input value="@if(count($exc_times) == 2){{$exc_times[1]}}@endif" type="time" class="form-control form-control-lg" name="to_holidays_time[]"> </div> <div class="col-lg-2"> <button type="button" class="btn btn-danger ml-auto mr-0" onclick="removeHoliday(this)"><i class="icon-bin"></i></button> </div> </div>
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="tab-pane fade" id="metaDataSettings">
@@ -1179,32 +1523,32 @@
             closeOnSelect: false
         })
     
-      if (Array.prototype.forEach) {
-               var elems = Array.prototype.slice.call(document.querySelectorAll('.switchery-primary'));
-               elems.forEach(function(html) {
-                   var switchery = new Switchery(html, { color: '#2196F3' });
-               });
-           }
-           else {
-               var elems = document.querySelectorAll('.switchery-primary');
-               for (var i = 0; i < elems.length; i++) {
-                   var switchery = new Switchery(elems[i], { color: '#2196F3' });
-               }
-           }
+        if (Array.prototype.forEach) {
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.switchery-primary'));
+            elems.forEach(function(html) {
+                var switchery = new Switchery(html, { color: '#2196F3' });
+            });
+        }
+        else {
+            var elems = document.querySelectorAll('.switchery-primary');
+            for (var i = 0; i < elems.length; i++) {
+                var switchery = new Switchery(elems[i], { color: '#2196F3' });
+            }
+        }
     
-       $('.form-control-uniform').uniform();
+        $('.form-control-uniform').uniform();
+        
+        $('.rating').numeric({allowThouSep:false,  min: 1, max: 5, maxDecimalPlaces: 1 });
+        $('.delivery_time').numeric({allowThouSep:false});
+        $('.price_range').numeric({allowThouSep:false});
+        $('.latitude').numeric({allowThouSep:false});
+        $('.longitude').numeric({allowThouSep:false});
+        $('.restaurant_charges').numeric({ allowThouSep:false, maxDecimalPlaces: 2 });
+        $('.delivery_charges').numeric({ allowThouSep:false, maxDecimalPlaces: 2 });
+        $('.free_delivery_subtotal').numeric({ allowThouSep:false, maxDecimalPlaces: 2 });
+        $('.commission_rate').numeric({ allowThouSep:false, maxDecimalPlaces: 2, max: 100 });
     
-       $('.rating').numeric({allowThouSep:false,  min: 1, max: 5, maxDecimalPlaces: 1 });
-       $('.delivery_time').numeric({allowThouSep:false});
-       $('.price_range').numeric({allowThouSep:false});
-       $('.latitude').numeric({allowThouSep:false});
-       $('.longitude').numeric({allowThouSep:false});
-       $('.restaurant_charges').numeric({ allowThouSep:false, maxDecimalPlaces: 2 });
-       $('.delivery_charges').numeric({ allowThouSep:false, maxDecimalPlaces: 2 });
-       $('.free_delivery_subtotal').numeric({ allowThouSep:false, maxDecimalPlaces: 2 });
-       $('.commission_rate').numeric({ allowThouSep:false, maxDecimalPlaces: 2, max: 100 });
-    
-       $('.base_delivery_charge').numeric({ allowThouSep:false, maxDecimalPlaces: 2, allowMinus: false });
+        $('.base_delivery_charge').numeric({ allowThouSep:false, maxDecimalPlaces: 2, allowMinus: false });
         $('.base_delivery_distance').numeric({ allowThouSep:false, maxDecimalPlaces: 0, allowMinus: false });
         $('.extra_delivery_charge').numeric({ allowThouSep:false, maxDecimalPlaces: 2, allowMinus: false });
         $('.extra_delivery_distance').numeric({ allowThouSep:false, maxDecimalPlaces: 0, allowMinus: false });
@@ -1279,6 +1623,34 @@
             });
         });
 
-     });
+    });
+
+    function timeBind(data) {
+        var el = "";
+        let day = data.getAttribute("data-day")
+        if(data.checked){
+            el = '<div class="col-lg-6 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> </div> <div class="col-lg-6 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> </div>';
+        }else{
+            el = '<div class="col-lg-12 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="'+day+'[]" required> </div>';
+        }
+        document.getElementById(day).innerHTML = el;
+    }
+
+    function addHoliday() {
+        var para = document.createElement("div");
+        
+        para.innerHTML = '<div class="row mb-2" data-key=""> <div class="col-lg-3"> <input value="" type="text" class="form-control form-control-lg" name="holidays_date[]" placeholder="yyyy-mm-dd" required> </div> <div class="col-lg-7 d-flex align-items-center"> <input value="" type="time" class="form-control form-control-lg" name="from_holidays_time[]"> <label class="px-2">to</label> <input value="" type="time" class="form-control form-control-lg" name="to_holidays_time[]"> </div> <div class="col-lg-2"> <button type="button" class="btn btn-danger ml-auto mr-0" onclick="removeHoliday(this)"><i class="icon-bin"></i></button> </div> </div>';
+
+        document.getElementById('holidays').appendChild(para);
+
+        let temp = document.getElementById('holidays');
+
+        console.log(temp.children.length);
+    }
+
+    function removeHoliday(node) {
+        node.parentNode.parentNode.parentNode.removeChild(node.parentNode.parentNode);
+    }
+
 </script>
 @endsection

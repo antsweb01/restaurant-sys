@@ -271,3 +271,77 @@ function getOrderStatusName($orderstatus_id)
             break;
     }
 }
+
+function openCloseTimesArray($times)
+{
+    $times_count = count($times);
+
+    if($times_count == 2){
+        if(empty($times[0]) || empty($times[1])){
+            return [];
+        }
+        $slot1 = $times[0].'-'.$times[1];
+        return [$slot1];
+    }elseif($times_count == 4){
+        if(empty($times[0]) || empty($times[1]) || empty($times[2]) || empty($times[3])){
+            return [];
+        }
+        $slot1 = $times[0].'-'.$times[1];
+        $slot2 = $times[2].'-'.$times[3];
+        return [$slot1, $slot2];
+    }else{
+        return [];
+    }
+}
+
+function openCloseHolidayArray($dates, $from_times, $to_times)
+{
+    $exceptions = array();
+    $day_count = count($dates);
+    // return $dates;
+    if($day_count > 0){
+        for ($i=0; $i < $day_count; $i++) { 
+            $ex_date = explode("-", $dates[$i]);
+
+            if(count($ex_date) == 2){
+                $date = $dates[$i];
+            }else{
+                $date = $dates[$i];
+            }
+
+            if(empty($from_times[$i]) || empty($to_times[$i]) ){
+                $time = [];
+            }else{
+                $time = $from_times[$i].'-'.$to_times[$i];
+            }
+
+            $exceptions[$date] = $time;
+        }
+    }
+    return $exceptions;
+}
+
+function extractOpenCloseTime($openclose, $day)
+{
+    if(!empty($openclose)) {
+        $encode_time = json_decode($openclose)->$day;
+
+        if(count($encode_time) == 1){
+            return explodeTime($encode_time[0]);
+        }elseif(count($encode_time) == 2){
+            $exp_time1 = explodeTime($encode_time[0]);
+            $exp_time2 = explodeTime($encode_time[1]);
+            return array_merge($exp_time1, $exp_time2);
+        }
+        return [];
+    }
+    return [];
+}
+
+function explodeTime($encode_time)
+{
+    if(!empty($encode_time)){
+        return explode("-", $encode_time);
+    }
+    return [];
+}
