@@ -17,6 +17,11 @@ class CustomCssProvider extends Component {
 							/>
 						)}
 						<style type="text/css">{localStorage.getItem("customCSS")}</style>
+						<link
+							rel="stylesheet"
+							type="text/css"
+							href="/assets/css/kitchen-app.css"
+						/>
 					</Helmet>
 				)}
 			</React.Fragment>
