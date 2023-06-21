@@ -103,4 +103,12 @@ class Order extends Model
     {
         return $this->hasOne('App\RazorpayData');
     }
+
+    /**
+     * @return mixed
+     */
+    public function kot()
+    {
+        return $this->hasOne('App\Kot');
+    }
 }

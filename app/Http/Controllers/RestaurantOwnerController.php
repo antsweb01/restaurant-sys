@@ -24,6 +24,7 @@ use App\RestaurantEarning;
 use App\StorePayoutDetail;
 use Illuminate\Http\Request;
 use App\Helpers\TranslationHelper;
+use App\Kot;
 use Illuminate\Support\Facades\DB;
 use Nwidart\Modules\Facades\Module;
 use Modules\ThermalPrinter\Entities\PrinterSetting;
@@ -170,6 +171,22 @@ class RestaurantOwnerController extends Controller
         $restaurantIds = $user->restaurants->pluck('id')->toArray();
 
         $order = Order::where('id', $id)->whereIn('restaurant_id', $restaurantIds)->first();
+
+        $kot = true;
+        if(empty($order->kot))
+            $kot = false;
+        else{
+            if($order->kot->status == "pending"){
+                $kot = false;
+            }
+        }
+        if(!$kot){
+            if (\Illuminate\Support\Facades\Request::ajax()) {
+                return response()->json(['error' => false], 406);
+            } else {
+                return redirect()->back()->with(array('message' => __('storeDashboard.orderKitchenNotApproveNotification')));
+            }
+        }
 
         if ($order->orderstatus_id == '1') {
             $order->orderstatus_id = 2;
@@ -1770,6 +1787,43 @@ class RestaurantOwnerController extends Controller
                 return redirect()->back()->with(['message' => $th]);
             }
 
+        }
+    }
+
+    /**
+     * @param $id
+     */
+    public function sendKot($id)
+    {
+        $user = Auth::user();
+        $restaurantIds = $user->restaurants->pluck('id')->toArray();
+
+        $order = Order::where('id', $id)->whereIn('restaurant_id', $restaurantIds)->first();
+
+        if(empty($order->restaurant->kitchen_id)){
+            return redirect()->back()->with(array('message' => 'Kitchen not assigned to restaurant.'));
+        }
+
+        dd($order->restaurant->kitchen_id);
+
+        if ($order->orderstatus_id == '1') {
+            $kot = new Kot();
+            $kot->kitchen_id = $order->restaurant->kitchen_id;
+            $kot->order_id = $order->id;
+            $kot->status = 'pending';
+            $kot->save();
+
+            if (\Illuminate\Support\Facades\Request::ajax()) {
+                return response()->json(['success' => true]);
+            } else {
+                return redirect()->back()->with(array('success' => __('storeDashboard.kotSentNotification')));
+            }
+        }else{
+            if (\Illuminate\Support\Facades\Request::ajax()) {
+                return response()->json(['success' => false], 406);
+            } else {
+                return redirect()->back()->with(array('message' => __('storeDashboard.orderSomethingWentWrongNotification')));
+            }
         }
     }
 };

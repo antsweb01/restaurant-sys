@@ -205,4 +205,9 @@ class Restaurant extends Model implements Sortable
     {
         return $this->hasMany('App\RestaurantPayout');
     }
+
+    public function kitchen()
+    {
+        return $this->belongsTo('App\Kitchen');
+    }
 }

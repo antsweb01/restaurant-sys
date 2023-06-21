@@ -242,6 +242,12 @@
                                 class="icon-user-tie mr-2"></i> Store Owners</a>
                         @endcan
 
+                        @can('kitchen_admin_view')
+                        <a href="{{ route('admin.manageKitchenAdmin') }}"
+                            class="dropdown-item {{ Request::is('admin/manage-kitchen-admin') ? 'active' : ''}}"> <i
+                                class="fa fa-cutlery" aria-hidden="true"></i> Kitchen Admin</a>
+                        @endcan
+
                         @can('delivery_guys_view')
                         <a href="{{ route('admin.manageDeliveryGuys') }}"
                             class="dropdown-item {{ Request::is('admin/manage-delivery-guys') ? 'active' : ''}}"> <i

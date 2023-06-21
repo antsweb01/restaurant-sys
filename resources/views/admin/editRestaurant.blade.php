@@ -60,6 +60,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="#addKitchen" class="nav-link" data-toggle="tab">
+                                    <i class="fa fa-cutlery mr-2" aria-hidden="true"></i>
+                                    Add kitchen
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="#metaDataSettings" class="nav-link" data-toggle="tab">
                                     <i class="icon-info22 mr-2"></i>
                                     Meta Data
@@ -550,6 +556,23 @@
                                                 @endif
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade show" id="addKitchen">
+                                <legend class="font-weight-semibold text-uppercase font-size-sm">
+                                    Add kitchen
+                                </legend>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label"><span class="text-danger">*</span>Select Store:</label>
+                                    <div class="col-lg-9">
+                                        <select name="kitchen_id" class="select-zone" required>
+                                            @foreach($kitchens as $kitchen)
+                                            <option value="{{ $kitchen->id }}" @if($restaurant->kitchen_id == $kitchen->id)
+                                                selected @endif>{{ $kitchen->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>

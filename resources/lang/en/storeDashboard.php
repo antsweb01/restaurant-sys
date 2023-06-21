@@ -386,4 +386,10 @@ return [
     'waitingForServerResponseText' => 'Waiting for server response...',
     'liveTimerText' => 'Live Timer',
     'removeItemImageText' => 'Remove Image',
+
+    /* KOT */
+    'viewOrderKitchenActions' => 'Kitchen Action',
+    'sendKOT' => 'Send KOT',
+    'kotSentNotification' => 'KOT has been sent',
+    'orderKitchenNotApproveNotification' => 'Kitchen must be approved a KOT',
 ];

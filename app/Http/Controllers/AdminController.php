@@ -39,6 +39,7 @@ use App\RestaurantCategory;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\TranslationHelper;
+use App\Kitchen;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Nwidart\Modules\Facades\Module;
@@ -268,6 +269,12 @@ class AdminController extends Controller
                 $deliveryGuyDetails->save();
                 $user->delivery_guy_detail_id = $deliveryGuyDetails->id;
                 $user->save();
+            }
+
+            if ($user->hasRole('Kitchen')) {
+                $kitchen = new Kitchen();
+                $kitchen->user_id = $user->id;
+                $kitchen->save();
             }
 
             return redirect()->back()->with(['success' => 'User Created']);
@@ -1241,6 +1248,8 @@ class AdminController extends Controller
 
         $zones = Zone::get(['id', 'name']);
 
+        $kitchens = Kitchen::get();
+
         return view('admin.editRestaurant', array(
             'restaurant' => $restaurant,
             'restaurantCategories' => $restaurantCategories,
@@ -1251,6 +1260,7 @@ class AdminController extends Controller
             'rating' => storeAvgRating($restaurant->ratings),
             'zones' => $zones,
             'openclose' => $restaurant->openclose,
+            'kitchens' => $kitchens,
         ));
     }
 
@@ -1423,6 +1433,8 @@ class AdminController extends Controller
                 'exceptions' => openCloseHolidayArray($request->holidays_date, $request->from_holidays_time, $request->to_holidays_time)
             );
             $restaurant->openclose = json_encode($openclose);
+
+            $restaurant->kitchen_id = $request->kitchen_id;
 
             try {
                 if (isset($request->restaurant_category_restaurant)) {
@@ -2459,6 +2471,8 @@ class AdminController extends Controller
 
             Permission::create(['name' => 'login_as_customer', 'readable_name' => 'Login as Customer']);
 
+            Permission::create(['name' => 'kitchen_admin_view', 'readable_name' => 'View Kitchen Admin User']);
+
             $user = User::where('id', '1')->first();
             $user->givePermissionTo(Permission::all());
             /* END Create Permission and add all permissions to Admin */
@@ -3285,5 +3299,54 @@ class AdminController extends Controller
         } else {
             return redirect(route('admin.get.editUser', $request->user_id) . $request->window_redirect_hash)->with(['message' => 'Primary address cannot be deleted']);
         }
+    }
+
+    public function updateKitchen(Request $request)
+    {
+        $kitchen = Kitchen::find($request->kitchen_id);
+        if($kitchen){
+            $kitchen->code = $request->code;
+            $kitchen->name = $request->name;
+            $kitchen->phone = $request->phone;
+            $kitchen->address = $request->address;
+            $kitchen->save();
+            return redirect()->back()->with(['success' => 'Kitchen Data Updated']);
+        }
+        return redirect()->back()->with(['message' => 'Kitchen data not found']);
+    }
+
+    public function manageKitchenAdmin(Request $request)
+    {
+        return view('admin.manageKitchenAdmins');
+    }
+
+    public function getManageKitchenAdminKitchen($id)
+    {
+        $user = User::where('id', $id)->first();
+        if ($user->hasRole('Kitchen')) {
+            $kitchen = 
+            $userRestaurants = $user->kitchen->restaurants;
+            $userRestaurantsIds = $user->kitchen->restaurants->pluck('id')->toArray();
+
+            $allRestaurants = Restaurant::get();
+
+            return view('admin.manageKitchenAdminRestaurants', array(
+                'user' => $user,
+                'userRestaurants' => $userRestaurants,
+                'allRestaurants' => $allRestaurants,
+                'userRestaurantsIds' => $userRestaurantsIds,
+            ));
+        }
+    }
+
+    // not use stil 19.06.2023
+    public function updateKitchenAdminKitchen(Request $request)
+    {
+        dd($request->all());
+        $user = User::find($request->id);
+        if($user){
+            
+        }
+        return redirect()->back()->with(['message' => 'User not found']);
     }
 };

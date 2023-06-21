@@ -297,25 +297,27 @@ function openCloseTimesArray($times)
 function openCloseHolidayArray($dates, $from_times, $to_times)
 {
     $exceptions = array();
-    $day_count = count($dates);
-    // return $dates;
-    if($day_count > 0){
-        for ($i=0; $i < $day_count; $i++) { 
-            $ex_date = explode("-", $dates[$i]);
+    if(!empty($dates)){
+        $day_count = count($dates);
+        // return $dates;
+        if($day_count > 0){
+            for ($i=0; $i < $day_count; $i++) { 
+                $ex_date = explode("-", $dates[$i]);
 
-            if(count($ex_date) == 2){
-                $date = $dates[$i];
-            }else{
-                $date = $dates[$i];
+                if(count($ex_date) == 2){
+                    $date = $dates[$i];
+                }else{
+                    $date = $dates[$i];
+                }
+
+                if(empty($from_times[$i]) || empty($to_times[$i]) ){
+                    $time = [];
+                }else{
+                    $time = $from_times[$i].'-'.$to_times[$i];
+                }
+
+                $exceptions[$date] = $time;
             }
-
-            if(empty($from_times[$i]) || empty($to_times[$i]) ){
-                $time = [];
-            }else{
-                $time = $from_times[$i].'-'.$to_times[$i];
-            }
-
-            $exceptions[$date] = $time;
         }
     }
     return $exceptions;

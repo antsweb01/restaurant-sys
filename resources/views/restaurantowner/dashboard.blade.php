@@ -134,25 +134,60 @@
                                     @endif
                                 </td>
                                 <td class="text-center new-order-actions">
-                                    @if($nO->orderstatus_id == 1)
-                                    <a href="javascript:void(0)"
-                                        class="btn btn-primary btn-labeled btn-labeled-left mr-2 accpetOrderBtnTableList"
-                                        data-id={{ $nO->id }}> <b><i class="icon-checkmark3 ml-1"></i> </b>
-                                        {{__('storeDashboard.dashboardAcceptOrder')}} </a>
-                                    @endif
                                     @if($nO->orderstatus_id == 10)
                                     <a href="{{ route('restaurant.confirmScheduledOrder', $nO->id) }}"
                                         class="btn btn-success btn-labeled btn-labeled-left mr-2 confirmOrderBtnTableList"
                                         data-id={{ $nO->id }}> <b><i class="icon-checkmark3 ml-1"></i> </b>
                                         {{__('orderScheduleLang.dashboardConfirmScheduledOrder')}} </a>
                                     @endif
-
-                                    <a href="{{ route('restaurant.cancelOrder', $nO->id) }}"
-                                        class="btn btn-danger btn-labeled btn-labeled-right mr-2 cancelOrderBtnTableList"
-                                        data-popup="tooltip" data-placement="right"
-                                        title="{{ __('storeDashboard.dashboardDoubleClickMsg') }}"> <b><i
-                                                class="icon-cross ml-1"></i></b>
-                                        {{__('storeDashboard.dashboardCancelOrder')}} </a>
+                                    @php
+                                        $kot = false;
+                                        $kot_status = "";
+                                        if(empty($nO->kot))
+                                            $kot = true;
+                                        else{
+                                            if($nO->kot->status == "pending"){
+                                                $kot = true;
+                                                $kot_status = "pending";
+                                            }else{
+                                                $kot_status = $nO->kot->status;
+                                            }
+                                        }
+                                    @endphp
+                                    @if($nO->orderstatus_id == 1)
+                                        @if ($kot)
+                                            @if ($kot_status == "pending")
+                                                <label style="border: solid 0.125rem #d7d11f; border-radius: 5px; padding: 3px 15px; color: #a98d03;"><i class="fa-regular fa-clock"></i> KOT Pending..</label>
+                                            @else
+                                                <a href="{{ route('restaurant.sendKot', $nO->id) }}"
+                                                    class="mr-2 btn btn-lg acceptOrderBtn btn-primary"> {{__('storeDashboard.sendKOT')}} <i
+                                                        class="icon-paperplane ml-1"></i></a>
+                                            @endif
+                                            <a href="{{ route('restaurant.cancelOrder', $nO->id) }}"
+                                                class="btn btn-danger btn-labeled btn-labeled-right mr-2 cancelOrderBtnTableList"
+                                                data-popup="tooltip" data-placement="right"
+                                                title="{{ __('storeDashboard.dashboardDoubleClickMsg') }}"> <b><i
+                                                        class="icon-cross ml-1"></i></b>
+                                                {{__('storeDashboard.dashboardCancelOrder')}} </a>
+                                        @else
+                                            @if ($kot_status == "accept")
+                                                <label style="border: solid 0.125rem #1f75d7; border-radius: 5px; padding: 3px 15px; color: #034ba9;"><i class="fa-regular fa-clock"></i> KOT Accepted</label>
+                                            @elseif ($kot_status == "compleat")
+                                                <label style="border: solid 0.125rem #1fd737; border-radius: 5px; padding: 3px 15px; color: #019c1b;"><i class="fa-regular fa-clock"></i> KOT Completed</label>
+                                            @else
+                                            @endif
+                                            <a href="javascript:void(0)"
+                                                class="btn btn-primary btn-labeled btn-labeled-left mr-2 accpetOrderBtnTableList"
+                                                data-id={{ $nO->id }}> <b><i class="icon-checkmark3 ml-1"></i> </b>
+                                                {{__('storeDashboard.dashboardAcceptOrder')}} </a>
+                                            <a href="{{ route('restaurant.cancelOrder', $nO->id) }}"
+                                                class="btn btn-danger btn-labeled btn-labeled-right mr-2 cancelOrderBtnTableList"
+                                                data-popup="tooltip" data-placement="right"
+                                                title="{{ __('storeDashboard.dashboardDoubleClickMsg') }}"> <b><i
+                                                        class="icon-cross ml-1"></i></b>
+                                                {{__('storeDashboard.dashboardCancelOrder')}} </a>
+                                        @endif
+                                    @endif
                                 </td>
                                 <td>
                                     {{ $nO->restaurant->name }}

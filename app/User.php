@@ -142,4 +142,9 @@ class User extends Authenticatable implements JWTSubject, Wallet, WalletFloat
     {
         return $this->hasMany('App\TodoNote');
     }
+
+    public function kitchen()
+    {
+        return $this->hasOne('App\Kitchen');
+    }
 }

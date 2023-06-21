@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- <meta http-equiv="refresh" content="30"> --}}
     <link rel="apple-touch-icon" sizes="180x180"
         href="{{substr(url("/"), 0, strrpos(url("/"), '/'))}}/assets/backend/global_assets/images/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32"
@@ -18,6 +19,9 @@
         type="text/css">
     <link
         href="{{substr(url("/"), 0, strrpos(url("/"), '/'))}}/assets/backend/global_assets/css/icons/icomoon/styles.min.css"
+        rel="stylesheet" type="text/css">
+    <link
+        href="{{substr(url("/"), 0, strrpos(url("/"), '/'))}}/assets/backend/global_assets/css/icons/fontawesome/css/all.min.css"
         rel="stylesheet" type="text/css">
     <link href="{{substr(url("/"), 0, strrpos(url("/"), '/'))}}/assets/backend/css/bootstrap.min.css?v=3.4.0-BUILD-02"
         rel="stylesheet" type="text/css">

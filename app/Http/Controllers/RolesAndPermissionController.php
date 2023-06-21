@@ -11,8 +11,8 @@ class RolesAndPermissionController extends Controller
 {
     public function index()
     {
-        //get all roles except for the first 4 (Admin , StoreOwner, Customer and Delivery Guy)
-        $roles = Role::where('id', '>', '4')->with('permissions')->orderBy('created_at', 'DESC')->get();
+        //get all roles except for the first 5 (Admin , StoreOwner, Customer, Delivery Guy and Kitchen)
+        $roles = Role::where('id', '>', '5')->with('permissions')->orderBy('created_at', 'DESC')->get();
         $permissions = Permission::get();
 
         return view('admin.rolesManagement', array(
