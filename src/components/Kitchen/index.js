@@ -50,7 +50,7 @@ class Kitchen extends Component {
                                     1
                                 </span>
                                 <i class="si si-bag fa-2x"></i> <br />
-                                Compleated
+                                Completed
                                 <Ink duration="500" hasTouch="true" />
                             </div>
                         </Tab>
@@ -81,7 +81,7 @@ class Kitchen extends Component {
                         <div className="tab_theme_2 vh-100 dark-bg">
                             <div className="light-bg">
                                 <div className="container d-flex justify-content-between">
-                                    <div class="delivery-tab-title px-20 py-15">Accepts Orders</div>
+                                    <div class="delivery-tab-title px-20 py-15">Accepted Orders</div>
                                     <div className="delivery-order-refresh">
                                         <button
                                             className="btn btn-refreshOrders mr-15"
@@ -101,7 +101,7 @@ class Kitchen extends Component {
                         <div className="tab_theme_2 vh-100 dark-bg">
                             <div className="light-bg">
                                 <div className="container d-flex justify-content-between">
-                                    <div class="delivery-tab-title px-20 py-15">Compleated Orders</div>
+                                    <div class="delivery-tab-title px-20 py-15">Completed Orders</div>
                                     <div className="delivery-order-refresh">
                                         <button
                                             className="btn btn-refreshOrders mr-15"

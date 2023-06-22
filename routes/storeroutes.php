@@ -83,5 +83,7 @@ Route::group(['prefix' => 'store-owner', 'middleware' => ['auth', 'storeowner']]
     Route::post('/update-store-payout-details', 'RestaurantOwnerController@updateStorePayoutDetails')->name('restaurant.updateStorePayoutDetails');
 
     Route::get('/dashboard', 'RestaurantOwnerController@dashboard')->name('restaurant.dashboard');
+
+    Route::get('/kot/send/{id}', 'RestaurantOwnerController@sendKot')->name('restaurant.sendKot');
 });
 /* END Restaurant Owner Routes */

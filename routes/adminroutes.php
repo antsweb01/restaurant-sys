@@ -21,6 +21,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'checkzoneaccess']],
         Route::get('/manage-delivery-guys/getDeliveryInfoEagleView/{id}', 'EagleViewController@getDeliveryInfoEagleView')->name('admin.getDeliveryInfoEagleView');
     });
 
+    Route::group(['middleware' => 'permission:kitchen_admin_view'], function () {
+        Route::get('/manage-kitchen-admin', 'AdminController@manageKitchenAdmin')->name('admin.manageKitchenAdmin');
+        Route::get('/kitchenAdminDatatable', 'Datatables\KitchenAdminDatatable@kitchenAdminDatatable')->name('admin.kitchenAdminDatatable');
+        Route::get('/manage-kitchen-admin-kitchen/{id}', 'AdminController@getManageKitchenAdminKitchen')->name('admin.get.manageKitchenAdminKitchen');
+
+        Route::post('/kitchen-update', 'AdminController@updateKitchen')->name('admin.update.kitchen');
+
+        // not use stil 19.06.2023
+        Route::post('/update-kitchen-admin-kitchen', 'AdminController@updateKitchenAdminKitchen')->name('admin.updateKitchenAdminKitchen'); 
+    });
+
     Route::group(['middleware' => 'permission:delivery_guys_manage_stores'], function () {
         Route::post('/update-delivery-guys-stores', 'AdminController@updateDeliveryGuysRestaurants')->name('admin.updateDeliveryGuysRestaurants');
     });

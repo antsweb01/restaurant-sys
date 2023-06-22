@@ -73,6 +73,9 @@ class RegisterController extends Controller
                     // login and redirect to dashbaord...
                     Auth::loginUsingId($user->id);
                 }
+                if ($request->role == 'KITCHEN') {
+                    $user->assignRole('Kitchen');
+                }
             } else {
                 $user->assignRole('Customer');
                 return redirect()->back()->with(['success' => 'User Created']);

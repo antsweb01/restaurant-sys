@@ -61,6 +61,7 @@
                                 </a>
                             </li>
                             @endif
+                            @if(!$user->hasRole("Kitchen"))
                             <li class="nav-item">
                                 <a href="javascript:void(0)" class="nav-link" data-toggle="tab" id="walletBalance">
                                     <i class="icon-piggy-bank mr-2"></i>
@@ -73,6 +74,7 @@
                                     Wallet Transactions
                                 </a>
                             </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="#userOrders" class="nav-link" data-toggle="tab">
                                     <i class="icon-basket mr-2"></i>
@@ -95,6 +97,14 @@
                                     User Addresses
                                 </a>
                             </li>
+                            @if($user->hasRole("Kitchen"))
+                            <li class="nav-item">
+                                <a href="javascript:void(0)" class="nav-link" data-toggle="tab" id="kitchenDetails">
+                                    <i class="fa fa-cutlery mr-2" aria-hidden="true"></i>
+                                    Kitchen Details
+                                </a>
+                            </li>
+                            @endif
                         </ul>
                         <div class="tab-content" style="width: 100%; padding: 0 25px;">
 
@@ -114,7 +124,7 @@
                                     <label class="col-lg-3 col-form-label">Email:</label>
                                     <div class="col-lg-9">
                                         <input type="text" class="form-control form-control-lg" name="email"
-                                            value="{{ $user->email }}" placeholder="Emter Email Address" required
+                                            value="{{ $user->email }}" placeholder="Enter Email Address" required
                                             autocomplete="new-email">
                                     </div>
                                 </div>
@@ -358,6 +368,7 @@
                             </div>
                             @endif
 
+                            @if(!$user->hasRole("Kitchen"))
                             <div class="tab-pane fade" id="walletTransactions">
                                 <legend class="font-weight-semibold text-uppercase font-size-sm">
                                     Wallet Transactions
@@ -414,6 +425,7 @@
                                     {{ config('setting.walletName') }}</p>
                                 @endif
                             </div>
+                            @endif
 
                             <div class="tab-pane fade" id="userOrders">
                                 <legend class="font-weight-semibold text-uppercase font-size-sm">
@@ -572,6 +584,7 @@
     @csrf
 </form>
 
+@if(!$user->hasRole("Kitchen"))
 <div class="content" id="walletBalanceBlock" style="margin-bottom: 10rem;">
     <div class="col-md-9">
         <div class="card">
@@ -658,6 +671,67 @@
         </div>
     </div>
 </div>
+@endif
+
+@if($user->hasRole("Kitchen"))
+<div class="content" id="kitchenDetailsBlock" style="margin-bottom: 10rem;">
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-body">
+                <legend class="font-weight-semibold h6">
+                    <mark>Kitchen Details</mark>
+                </legend>
+                <form action="{{ route('admin.update.kitchen') }}" method="POST" class="p-3">
+                    <input type="hidden" name="kitchen_id" value="{{ $user->kitchen->id }}">
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">Kitchen Code:</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control form-control-lg"
+                                name="code"
+                                value="@if ($user->kitchen){{$user->kitchen->code}}@endif"
+                                placeholder="AKK8978" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">Kitchen Name:</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control form-control-lg"
+                                name="name"
+                                value="@if ($user->kitchen){{$user->kitchen->name}}@endif" 
+                                placeholder="Main Kitchen"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">Kitchen Phone:</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control form-control-lg"
+                                name="phone"
+                                value="@if ($user->kitchen){{$user->kitchen->phone}}@endif" 
+                                placeholder="0712345678">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-4 col-form-label">Kitchen Address:</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control form-control-lg"
+                                name="address"
+                                value="@if ($user->kitchen){{$user->kitchen->address}}@endif" 
+                                placeholder="Gampaha">
+                        </div>
+                    </div>
+                    @csrf
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-secondary">
+                            Update Kitchen
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 <script>
     $(function () {
@@ -723,6 +797,11 @@
 
         $('#walletBalance').click(function(event) {
             var targetOffset = $('#walletBalanceBlock').offset().top - 70;
+            $('html, body').animate({scrollTop: targetOffset}, 500);
+        });
+
+        $('#kitchenDetails').click(function(event) {
+            var targetOffset = $('#kitchenDetailsBlock').offset().top - 70;
             $('html, body').animate({scrollTop: targetOffset}, 500);
         });
 

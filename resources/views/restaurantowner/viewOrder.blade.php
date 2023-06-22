@@ -452,32 +452,90 @@
 
             @if(($order->orderstatus_id == 1) || ($order->delivery_type == 2 && $order->orderstatus_id == 2) ||
             ($order->delivery_type == 2 && $order->orderstatus_id == 7))
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="text-center mb-3"> <strong> {{ __('storeDashboard.viewOrderOrderActions') }} </strong>
-                    </h4>
-                    <div class="d-flex justify-content-center">
-                        @if($order->orderstatus_id == 1)
-                        <a href="{{ route('restaurant.acceptOrder', $order->id) }}"
-                            class="mr-2 btn btn-lg acceptOrderBtn btn-primary"> {{__('storeDashboard.ovAccept')}} <i
-                                class="icon-checkmark3 ml-1"></i></a>
-                        <a href="{{ route('restaurant.cancelOrder', $order->id) }}"
-                            class="btn btn-lg cancelOrderBtn btn-danger" data-popup="tooltip" data-placement="top"
-                            title="{{__('storeDashboard.ovTooltipCancel')}}"> {{__('storeDashboard.ovCancel')}} <i
-                                class="icon-cross ml-1"></i></a>
-                        @endif
-                        @if($order->delivery_type == 2 && $order->orderstatus_id == 2)
-                        <a href="{{ route('restaurant.markOrderReady', $order->id) }}" class="btn btn-lg btn-warning">
-                            {{__('storeDashboard.ovMarkAsReady')}} <i class="icon-checkmark3 ml-1"></i></a>
-                        @endif
-                        @if($order->delivery_type == 2 && $order->orderstatus_id == 7)
-                        <a href="{{ route('restaurant.markSelfPickupOrderAsCompleted', $order->id) }}"
-                            class="btn btn-lg btn-success"> {{__('storeDashboard.ovMarkAsCompleted')}} <i
-                                class="icon-checkmark3 ml-1"></i></a>
-                        @endif
+                @php
+                    $kot = false;
+                    $kot_status = "";
+                    if(empty($order->kot))
+                        $kot = true;
+                    else{
+                        if($order->kot->status == "pending"){
+                            $kot = true;
+                            $kot_status = "pending";
+                        }else{
+                            $kot_status = $order->kot->status;
+                        }
+                    }
+                @endphp
+                @if ($kot)
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="text-center mb-3"> <strong> {{ __('storeDashboard.viewOrderKitchenActions') }} </strong>
+                            </h4>
+                            <div class="d-flex justify-content-center">
+                                @if ($kot_status == "pending")
+                                    <label style="border: solid 0.125rem #d7d11f; border-radius: 5px; padding: 3px 15px; color: #a98d03;"><i class="fa-regular fa-clock"></i> Order Pending..</label>
+                                @else
+                                    <a href="{{ route('restaurant.sendKot', $order->id) }}"
+                                        class="mr-2 btn btn-lg acceptOrderBtn btn-primary"> {{__('storeDashboard.sendKOT')}} <i
+                                            class="icon-paperplane ml-1"></i></a>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="text-center mb-3"> <strong> {{ __('storeDashboard.viewOrderOrderActions') }} </strong>
+                            </h4>
+                            <div class="d-flex justify-content-center">
+                                <a href="{{ route('restaurant.cancelOrder', $order->id) }}"
+                                    class="btn btn-lg cancelOrderBtn btn-danger" data-popup="tooltip" data-placement="top"
+                                    title="{{__('storeDashboard.ovTooltipCancel')}}"> {{__('storeDashboard.ovCancel')}} <i
+                                        class="icon-cross ml-1"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="text-center mb-3"> <strong> {{ __('storeDashboard.viewOrderKitchenActions') }} </strong>
+                            </h4>
+                            <div class="d-flex justify-content-center">
+                                @if ($kot_status == "accept")
+                                    <label style="border: solid 0.125rem #1f75d7; border-radius: 5px; padding: 3px 15px; color: #034ba9;"><i class="fa-regular fa-clock"></i> Order Accepted</label>
+                                @elseif ($kot_status == "compleat")
+                                    <label style="border: solid 0.125rem #1fd737; border-radius: 5px; padding: 3px 15px; color: #019c1b;"><i class="fa-regular fa-clock"></i> Order Completed</label>
+                                @else
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="text-center mb-3"> <strong> {{ __('storeDashboard.viewOrderOrderActions') }} </strong>
+                            </h4>
+                            <div class="d-flex justify-content-center">
+                                @if($order->orderstatus_id == 1)
+                                <a href="{{ route('restaurant.acceptOrder', $order->id) }}"
+                                    class="mr-2 btn btn-lg acceptOrderBtn btn-primary"> {{__('storeDashboard.ovAccept')}} <i
+                                        class="icon-checkmark3 ml-1"></i></a>
+                                <a href="{{ route('restaurant.cancelOrder', $order->id) }}"
+                                    class="btn btn-lg cancelOrderBtn btn-danger" data-popup="tooltip" data-placement="top"
+                                    title="{{__('storeDashboard.ovTooltipCancel')}}"> {{__('storeDashboard.ovCancel')}} <i
+                                        class="icon-cross ml-1"></i></a>
+                                @endif
+                                @if($order->delivery_type == 2 && $order->orderstatus_id == 2)
+                                <a href="{{ route('restaurant.markOrderReady', $order->id) }}" class="btn btn-lg btn-warning">
+                                    {{__('storeDashboard.ovMarkAsReady')}} <i class="icon-checkmark3 ml-1"></i></a>
+                                @endif
+                                @if($order->delivery_type == 2 && $order->orderstatus_id == 7)
+                                <a href="{{ route('restaurant.markSelfPickupOrderAsCompleted', $order->id) }}"
+                                    class="btn btn-lg btn-success"> {{__('storeDashboard.ovMarkAsCompleted')}} <i
+                                        class="icon-checkmark3 ml-1"></i></a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
             @endif
         </div>
     </div>
@@ -520,5 +578,9 @@
             }
         });
     }
+
+    setTimeout(() => {
+        document.location.reload();
+    }, 120000);
 </script>
 @endsection
