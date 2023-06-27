@@ -29,6 +29,8 @@ import deliverySingleOrderReducer from "./Delivery/singleorder/reducer";
 import gpsLocationReducer from "./Delivery/gpslocation/reducer";
 import acceptToDeliver from "./Delivery/deliveryprogress/reducer";
 
+import kitchenUserReducer from "./Kitchen/user/reducer";
+
 import helperReducer from "./helper/reducer";
 
 export default combineReducers({
@@ -59,4 +61,5 @@ export default combineReducers({
 	rating: ratingReducer,
 	alert: alertReducer,
 	helper: helperReducer,
+	kitchen_user: kitchenUserReducer,
 });

@@ -43,6 +43,7 @@ export default (initialState) => {
 			languages: state.languages.languages,
 			settings: state.settings,
 			popular_locations: state.popular_locations,
+			kitchen_user: state.kitchen_user,
 			// searches: state.searches,
 		};
 		localStorage.setItem("state", JSON.stringify(persist));

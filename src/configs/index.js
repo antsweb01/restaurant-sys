@@ -92,3 +92,7 @@ export const DELIVERY_COMPLETED_ORDERS_URL = WEBSITE_URL + "/public/api/delivery
 /* Module URLs*/
 export const ADMIN_LOGIN_AS_CUSTOMER_URL = WEBSITE_URL + "/public/callandorder/login-as-customer";
 export const REGISTER_GUEST_USER_URL = WEBSITE_URL + "/public/callandorder/register-guest-user";
+
+/* Kitchen URLs */
+export const LOGIN_KITCHEN_USER_URL = WEBSITE_URL + "/public/api/kitchen/login";
+export const TOGGLE_KITCHEN_STATUS_URL = WEBSITE_URL + "/public/api/kitchen/toggle-kitchen-status";

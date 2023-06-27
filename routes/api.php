@@ -300,6 +300,10 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/update-tax-number', [
         'uses' => 'UserController@updateTaxNumber',
     ]);
+
+    Route::post('/kitchen/toggle-kitchen-status', [
+        'uses' => 'KitchenController@toggleKitchenStatus',
+    ]);
 });
 /* END Protected Routes */
 
@@ -360,4 +364,10 @@ Route::post('/delivery/login', [
 
 Route::get('/store-owner/get-orders', [
     'uses' => 'StoreOwner\StoreOwnerAppController@getOrders',
+]);
+
+/* Kitchen App Routes */
+
+Route::post('/kitchen/login', [
+    'uses' => 'KitchenController@login',
 ]);
