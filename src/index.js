@@ -178,6 +178,13 @@ const Kitchen = Loadable({
 	loading: () => <Loading />,
 });
 
+// import KitchenLogin from "./components/Kitchen/Login";
+const KitchenLogin = Loadable({
+	loader: () => import("./components/Kitchen/Login"),
+	loading: () => <Loading />,
+});
+
+
 const ScrollToTop = () => {
 	window.scrollTo(0, 0);
 	return null;
@@ -234,6 +241,7 @@ ReactDOM.render(
 					<Route path={"/delivery/completed-orders"} exact component={Delivery} />
 					{/* Kitchen Routes */}
 					<Route path={"/kitchen"} exact component={Kitchen} />
+					<Route path={"/kitchen/login"} exact component={KitchenLogin} />
 					{/* Common Routes */}
 					{/* Admin Login as Customer Module Routes */}
 					<Route path={"/auth/login-as-customer/:id?"} exact component={LoginAsCustomer} />
