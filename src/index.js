@@ -184,6 +184,19 @@ const KitchenLogin = Loadable({
 	loading: () => <Loading />,
 });
 
+// import KitchenKots from "./components/Kitchen/kots";
+const KitchenKots = Loadable({
+	loader: () => import("./components/Kitchen/kots"),
+	loading: () => <Loading />,
+});
+
+// import ViewKot from "./components/Kitchen/ViewKot";
+const ViewKot = Loadable({
+	loader: () => import("./components/Kitchen/ViewKot"),
+	loading: () => <Loading />
+})
+
+
 
 const ScrollToTop = () => {
 	window.scrollTo(0, 0);
@@ -242,6 +255,8 @@ ReactDOM.render(
 					{/* Kitchen Routes */}
 					<Route path={"/kitchen"} exact component={Kitchen} />
 					<Route path={"/kitchen/login"} exact component={KitchenLogin} />
+					<Route path={"/kitchen/kots"} exact component={KitchenKots} />
+					<Route path={"/kitchen/kots/:kot_code"} exact component={ViewKot} />
 					{/* Common Routes */}
 					{/* Admin Login as Customer Module Routes */}
 					<Route path={"/auth/login-as-customer/:id?"} exact component={LoginAsCustomer} />

@@ -4,7 +4,7 @@ import Meta from "../../helpers/meta";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import { getSettings } from "../../../services/settings/actions";
-import { loginKitchenUser } from "../../../services/Kitchen/user/action";
+import { loginKitchenUser } from "../../../services/Kitchen/user/actions";
 import { getAllLanguages } from "../../../services/languages/actions";
 import { getSingleLanguageData } from "../../../services/languages/actions";
 import Loading from "../../helpers/loading";

@@ -304,6 +304,10 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/kitchen/toggle-kitchen-status', [
         'uses' => 'KitchenController@toggleKitchenStatus',
     ]);
+
+    Route::post('/kitchen/get-kots', [
+        'uses' => 'KitchenController@getKots',
+    ]);
 });
 /* END Protected Routes */
 

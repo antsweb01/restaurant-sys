@@ -76,6 +76,7 @@ class Orders extends Component {
 		localStorage.setItem("deliveryTabIndex", tabIndex);
 		this.setState({ tabIndex: tabIndex });
 	};
+	
 	render() {
 		if (window.innerWidth > 768) {
 			return <Redirect to="/" />;

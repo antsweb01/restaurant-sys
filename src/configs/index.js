@@ -96,3 +96,4 @@ export const REGISTER_GUEST_USER_URL = WEBSITE_URL + "/public/callandorder/regis
 /* Kitchen URLs */
 export const LOGIN_KITCHEN_USER_URL = WEBSITE_URL + "/public/api/kitchen/login";
 export const TOGGLE_KITCHEN_STATUS_URL = WEBSITE_URL + "/public/api/kitchen/toggle-kitchen-status";
+export const GET_KOTS_URL = WEBSITE_URL + "/public/api/kitchen/get-kots";
