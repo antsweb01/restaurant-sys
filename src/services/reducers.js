@@ -30,6 +30,7 @@ import gpsLocationReducer from "./Delivery/gpslocation/reducer";
 import acceptToDeliver from "./Delivery/deliveryprogress/reducer";
 
 import kitchenUserReducer from "./Kitchen/user/reducer";
+import kotsReducer from "./Kitchen/kots/reducer";
 
 import helperReducer from "./helper/reducer";
 
@@ -62,4 +63,5 @@ export default combineReducers({
 	alert: alertReducer,
 	helper: helperReducer,
 	kitchen_user: kitchenUserReducer,
+	kots: kotsReducer,
 });

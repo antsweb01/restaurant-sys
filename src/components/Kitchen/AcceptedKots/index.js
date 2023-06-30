@@ -3,7 +3,7 @@ import Moment from "react-moment";
 import Ink from "react-ink";
 import { Link } from "react-router-dom";
 
-class NewKots extends Component {
+class AcceptedKots extends Component {
 
     __refreshOrders = () => {
 		if (this.refs.btnSpinner) {
@@ -19,14 +19,14 @@ class NewKots extends Component {
 
     render() {
 
-        const { new_kots, kitchen_user } = this.props;
+        const { accept_kots, kitchen_user } = this.props;
         
         return(
             <React.Fragment>
                 <div className="tab_theme_2 vh-100 dark-bg">
                     <div className="light-bg mb-3">
                         <div className="container d-flex justify-content-between">
-                            <div class="delivery-tab-title px-20 py-15">New KOTs</div>
+                            <div class="delivery-tab-title px-20 py-15">Accepted KOTs</div>
                             <div className="delivery-order-refresh">
                                 <button
                                     className="btn btn-refreshOrders mr-15"
@@ -43,15 +43,15 @@ class NewKots extends Component {
                         <div className="row card-wraper">
                         {kitchen_user.data.status ? (
                             <React.Fragment>
-                            {new_kots.length === 0 ? (
+                            {accept_kots.length === 0 ? (
                                 <div className="col-12 p-5 text-center no-kots">
                                     <h3 className="mb-2">No</h3>
-                                    <h6>New Kitchen Order Tickets</h6>
+                                    <h6>Accepted Kitchen Order Tickets</h6>
                                 </div>
 							) : (
                                 <React.Fragment>
-                                    {new_kots.map((kot) => (
-                                        <div className="col-12 col-md-6 col-lg-4" style={{ marginBottom: "30px" }}>
+                                    {accept_kots.map((kot) => (
+                                        <div className="col-12 col-md-6 col-lg-4 mb-3" style={{ marginBottom: "30px" }}>
                                             <div className="card-view">
                                                 <Link
                                                     to={`/kitchen/kots/${kot.kot_no}`}
@@ -87,4 +87,4 @@ class NewKots extends Component {
 
 }
 
-export default NewKots;
+export default AcceptedKots;

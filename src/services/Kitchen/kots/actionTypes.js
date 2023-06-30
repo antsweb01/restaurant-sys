@@ -1,0 +1,1 @@
+export const GET_KOTS = "GET_KOTS"

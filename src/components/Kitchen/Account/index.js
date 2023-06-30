@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
 
-import { toggleKitchenStatus } from "../../../services/Kitchen/user/action";
+import { toggleKitchenStatus } from "../../../services/Kitchen/user/actions";
 
 import Ink from "react-ink";
 

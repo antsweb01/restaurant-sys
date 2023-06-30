@@ -1804,10 +1804,11 @@ class RestaurantOwnerController extends Controller
             return redirect()->back()->with(array('message' => 'Kitchen not assigned to restaurant.'));
         }
 
-        dd($order->restaurant->kitchen_id);
+        // dd($order->restaurant->kitchen_id);
 
         if ($order->orderstatus_id == '1') {
             $kot = new Kot();
+            $kot->kot_no = random_strings(8).$order->restaurant->kitchen_id.$order->id;
             $kot->kitchen_id = $order->restaurant->kitchen_id;
             $kot->order_id = $order->id;
             $kot->status = 'pending';
